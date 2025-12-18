@@ -82,10 +82,11 @@ const issueSchema = new mongoose.Schema(
                 default: 'Point',
             },
             coordinates: {
-                type: [Number], // [longitude, latitude]
-                required: [true, 'Location coordinates are required'],
+                type: [Number], // [longitude, latitude] - optional now
+                default: [0, 0],
                 validate: {
                     validator: function (v) {
+                        if (!v || v.length === 0) return true; // Allow empty
                         return v.length === 2 && v[0] >= -180 && v[0] <= 180 && v[1] >= -90 && v[1] <= 90;
                     },
                     message: 'Invalid coordinates',
@@ -95,7 +96,18 @@ const issueSchema = new mongoose.Schema(
                 type: String,
                 trim: true,
                 maxlength: 500,
+                required: [true, 'Location address is required'],
             },
+        },
+        state: {
+            type: String,
+            trim: true,
+            maxlength: 100,
+        },
+        district: {
+            type: String,
+            trim: true,
+            maxlength: 100,
         },
         status: {
             type: String,

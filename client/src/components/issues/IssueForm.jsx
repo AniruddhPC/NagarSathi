@@ -1,42 +1,24 @@
 import { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Upload, X, MapPin, Loader2 } from 'lucide-react';
+import { Upload, X, MapPin } from 'lucide-react';
 import Button from '../common/Button';
-import { useGeolocation } from '../../hooks/useGeolocation';
 import toast from 'react-hot-toast';
 
 /**
  * Issue Form Component
- * Form for creating/editing issues with image upload and GPS
+ * Form for creating/editing issues with image upload and text-based location
  */
 const IssueForm = ({ onSubmit, initialData = null, loading = false }) => {
     const [formData, setFormData] = useState({
         title: initialData?.title || '',
         description: initialData?.description || '',
         category: initialData?.category || '',
+        state: initialData?.state || '',
+        district: initialData?.district || '',
         address: initialData?.location?.address || '',
-        coordinates: initialData?.location?.coordinates || null,
     });
     const [images, setImages] = useState([]);
     const [existingImages] = useState(initialData?.images || []);
-
-    const { position, loading: gpsLoading, getLocation } = useGeolocation();
-
-    // Update coordinates when GPS position changes
-    const handleGetLocation = () => {
-        getLocation();
-    };
-
-    // Apply GPS coordinates to form
-    const applyGpsLocation = () => {
-        if (position) {
-            setFormData((prev) => ({
-                ...prev,
-                coordinates: [position.lng, position.lat],
-            }));
-            toast.success('Location captured successfully');
-        }
-    };
 
     // Image dropzone
     const onDrop = useCallback(
@@ -97,8 +79,8 @@ const IssueForm = ({ onSubmit, initialData = null, loading = false }) => {
             toast.error('Please select a category');
             return;
         }
-        if (!formData.coordinates) {
-            toast.error('Please capture your location');
+        if (!formData.address.trim()) {
+            toast.error('Please enter a location address');
             return;
         }
 
@@ -106,11 +88,13 @@ const IssueForm = ({ onSubmit, initialData = null, loading = false }) => {
         data.append('title', formData.title);
         data.append('description', formData.description);
         data.append('category', formData.category);
+        if (formData.state) data.append('state', formData.state);
+        if (formData.district) data.append('district', formData.district);
         data.append(
             'location',
             JSON.stringify({
                 type: 'Point',
-                coordinates: formData.coordinates,
+                coordinates: [0, 0], // Default coordinates - not using GPS
                 address: formData.address,
             })
         );
@@ -131,6 +115,26 @@ const IssueForm = ({ onSubmit, initialData = null, loading = false }) => {
         { value: 'road_damage', label: 'Road Damage' },
         { value: 'other', label: 'Other' },
     ];
+
+    const states = [
+        { value: 'andhra_pradesh', label: 'Andhra Pradesh' },
+        { value: 'delhi', label: 'Delhi' },
+        { value: 'gujarat', label: 'Gujarat' },
+        { value: 'karnataka', label: 'Karnataka' },
+        { value: 'maharashtra', label: 'Maharashtra' },
+        { value: 'tamil_nadu', label: 'Tamil Nadu' },
+        { value: 'telangana', label: 'Telangana' },
+        { value: 'uttar_pradesh', label: 'Uttar Pradesh' },
+    ];
+
+    const districtsByState = {
+        maharashtra: ['Mumbai', 'Pune', 'Nagpur', 'Thane', 'Nashik'],
+        karnataka: ['Bangalore Urban', 'Mysore', 'Mangalore', 'Hubli'],
+        tamil_nadu: ['Chennai', 'Coimbatore', 'Madurai', 'Salem'],
+        delhi: ['Central Delhi', 'East Delhi', 'New Delhi', 'South Delhi'],
+        gujarat: ['Ahmedabad', 'Surat', 'Vadodara', 'Rajkot'],
+        uttar_pradesh: ['Lucknow', 'Noida', 'Ghaziabad', 'Kanpur'],
+    };
 
     return (
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -173,6 +177,51 @@ const IssueForm = ({ onSubmit, initialData = null, loading = false }) => {
                 </select>
             </div>
 
+            {/* State and District */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label className="block text-dark-200 text-sm font-medium mb-2">
+                        State
+                    </label>
+                    <select
+                        name="state"
+                        value={formData.state}
+                        onChange={(e) => {
+                            setFormData(prev => ({ ...prev, state: e.target.value, district: '' }));
+                        }}
+                        className="select-field"
+                    >
+                        <option value="">Select state</option>
+                        {states.map((st) => (
+                            <option key={st.value} value={st.value}>
+                                {st.label}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+                <div>
+                    <label className="block text-dark-200 text-sm font-medium mb-2">
+                        District
+                    </label>
+                    <select
+                        name="district"
+                        value={formData.district}
+                        onChange={handleChange}
+                        className="select-field"
+                        disabled={!formData.state || !districtsByState[formData.state]}
+                    >
+                        <option value="">Select district</option>
+                        {formData.state && districtsByState[formData.state] &&
+                            districtsByState[formData.state].map((district) => (
+                                <option key={district} value={district.toLowerCase().replace(/\s+/g, '_')}>
+                                    {district}
+                                </option>
+                            ))
+                        }
+                    </select>
+                </div>
+            </div>
+
             {/* Description */}
             <div>
                 <label className="block text-dark-200 text-sm font-medium mb-2">
@@ -191,53 +240,28 @@ const IssueForm = ({ onSubmit, initialData = null, loading = false }) => {
                 </p>
             </div>
 
-            {/* Location */}
+            {/* Location - Text Based */}
             <div>
                 <label className="block text-dark-200 text-sm font-medium mb-2">
-                    Location *
+                    Location Address *
                 </label>
-                <div className="space-y-3">
-                    <div className="flex gap-3">
-                        <Button
-                            type="button"
-                            variant="secondary"
-                            icon={gpsLoading ? Loader2 : MapPin}
-                            onClick={handleGetLocation}
-                            disabled={gpsLoading}
-                            className={gpsLoading ? 'animate-pulse' : ''}
-                        >
-                            {gpsLoading ? 'Getting Location...' : 'Get My Location'}
-                        </Button>
-                        {position && !formData.coordinates && (
-                            <Button
-                                type="button"
-                                variant="primary"
-                                onClick={applyGpsLocation}
-                            >
-                                Use This Location
-                            </Button>
-                        )}
-                    </div>
-
-                    {formData.coordinates && (
-                        <div className="flex items-center gap-2 text-sm text-emerald-400">
-                            <MapPin size={16} />
-                            <span>
-                                Location captured: {formData.coordinates[1].toFixed(6)},{' '}
-                                {formData.coordinates[0].toFixed(6)}
-                            </span>
-                        </div>
-                    )}
-
+                <div className="relative">
+                    <MapPin
+                        size={18}
+                        className="absolute left-3 top-1/2 -translate-y-1/2 text-dark-400"
+                    />
                     <input
                         type="text"
                         name="address"
                         value={formData.address}
                         onChange={handleChange}
-                        placeholder="Enter address or landmark (optional)"
-                        className="input-field"
+                        placeholder="Enter full address, landmark, or area name"
+                        className="input-field pl-10"
                     />
                 </div>
+                <p className="text-dark-500 text-xs mt-1">
+                    E.g., "Near Gandhi Statue, MG Road, Bangalore" or "Sector 15, Noida"
+                </p>
             </div>
 
             {/* Image Upload */}
@@ -250,8 +274,8 @@ const IssueForm = ({ onSubmit, initialData = null, loading = false }) => {
                 <div
                     {...getRootProps()}
                     className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all duration-200 ${isDragActive
-                            ? 'border-primary-500 bg-primary-500/10'
-                            : 'border-dark-600 hover:border-primary-500 hover:bg-dark-700/50'
+                        ? 'border-primary-500 bg-primary-500/10'
+                        : 'border-dark-600 hover:border-primary-500 hover:bg-dark-700/50'
                         }`}
                 >
                     <input {...getInputProps()} />

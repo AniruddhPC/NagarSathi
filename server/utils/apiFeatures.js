@@ -10,13 +10,19 @@ class APIFeatures {
 
     /**
      * Filter by query parameters
-     * Supports: category, status, createdBy
+     * Supports: category, status, createdBy, state (multi-select)
      * Excludes pagination/sorting fields from filtering
      */
     filter() {
         const queryObj = { ...this.queryString };
         const excludedFields = ['page', 'sort', 'limit', 'fields', 'search', 'lat', 'lng', 'radius'];
         excludedFields.forEach((field) => delete queryObj[field]);
+
+        // Handle multi-select for state field (comma-separated values)
+        if (queryObj.state && queryObj.state.includes(',')) {
+            const states = queryObj.state.split(',').filter(Boolean);
+            queryObj.state = { $in: states };
+        }
 
         // Handle advanced filtering (gte, gt, lte, lt)
         let queryStr = JSON.stringify(queryObj);

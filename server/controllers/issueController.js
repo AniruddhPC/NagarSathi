@@ -13,7 +13,7 @@ import APIFeatures from '../utils/apiFeatures.js';
 // @route   POST /api/issues
 // @access  Private (User)
 export const createIssue = asyncHandler(async (req, res) => {
-    const { title, description, category, location } = req.body;
+    const { title, description, category, location, state, district } = req.body;
 
     // Get image URLs from uploaded files
     const images = req.files ? req.files.map((file) => file.path) : [];
@@ -30,6 +30,8 @@ export const createIssue = asyncHandler(async (req, res) => {
         category,
         images,
         location: parsedLocation,
+        state,
+        district,
         createdBy: req.user._id,
         statusTimeline: [
             {
