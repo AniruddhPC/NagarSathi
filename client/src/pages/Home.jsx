@@ -82,34 +82,38 @@ const Home = () => {
                             {pagination.total} issues reported in your community
                         </p>
                     </div>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 md:gap-3">
                         {/* Mobile Filter Button */}
                         <button
                             onClick={() => setMobileFiltersOpen(true)}
-                            className={`lg:hidden flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-all duration-200 ${hasActiveFilters
-                                    ? 'bg-primary-600/20 border-primary-500/50 text-primary-400'
-                                    : 'bg-dark-800 border-dark-700 text-dark-300 hover:text-white hover:border-dark-600'
+                            className={`lg:hidden flex items-center gap-2 px-3 md:px-4 py-2.5 rounded-xl border transition-all duration-200 ${hasActiveFilters
+                                ? 'bg-primary-600/20 border-primary-500/50 text-primary-400'
+                                : 'bg-dark-800 border-dark-700 text-dark-300 hover:text-white hover:border-dark-600'
                                 }`}
                         >
                             <SlidersHorizontal size={18} />
-                            <span>Filters</span>
+                            <span className="hidden md:inline">Filters</span>
                             {hasActiveFilters && (
                                 <span className="w-2 h-2 rounded-full bg-primary-400" />
                             )}
                         </button>
                         <Link to="/map" state={{ filters: params }}>
-                            <Button variant="secondary" icon={Map}>
-                                Map View
+                            <Button variant="secondary" icon={Map} className="!px-3 md:!px-4">
+                                <span className="hidden md:inline">Map View</span>
                             </Button>
                         </Link>
                         <SignedIn>
                             <Link to="/report">
-                                <Button icon={Plus}>Report Issue</Button>
+                                <Button icon={Plus} className="!px-3 md:!px-4">
+                                    <span className="hidden md:inline">Report Issue</span>
+                                </Button>
                             </Link>
                         </SignedIn>
                         <SignedOut>
                             <Link to="/sign-in">
-                                <Button icon={Plus}>Sign In to Report</Button>
+                                <Button icon={Plus} className="!px-3 md:!px-4">
+                                    <span className="hidden md:inline">Sign In</span>
+                                </Button>
                             </Link>
                         </SignedOut>
                     </div>

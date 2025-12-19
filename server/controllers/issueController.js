@@ -79,13 +79,32 @@ export const getIssues = asyncHandler(async (req, res) => {
         .populate('createdBy', 'name avatar')
         .lean();
 
+    // Get reports count for each issue
+    const issueIds = issues.map(issue => issue._id);
+    const reportsCounts = await IssueReport.aggregate([
+        { $match: { issue: { $in: issueIds }, status: 'pending' } },
+        { $group: { _id: '$issue', count: { $sum: 1 } } }
+    ]);
+
+    // Create a map of issue ID to reports count
+    const reportsCountMap = {};
+    reportsCounts.forEach(item => {
+        reportsCountMap[item._id.toString()] = item.count;
+    });
+
+    // Add reportsCount to each issue
+    const issuesWithReports = issues.map(issue => ({
+        ...issue,
+        reportsCount: reportsCountMap[issue._id.toString()] || 0
+    }));
+
     res.status(200).json({
         success: true,
-        count: issues.length,
+        count: issuesWithReports.length,
         total,
         page: features.page,
         pages: Math.ceil(total / features.limit),
-        data: issues,
+        data: issuesWithReports,
     });
 });
 
