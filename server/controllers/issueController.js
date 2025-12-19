@@ -1,6 +1,8 @@
 import Issue from '../models/Issue.js';
 import Comment from '../models/Comment.js';
 import Upvote from '../models/Upvote.js';
+import IssueReport from '../models/IssueReport.js';
+import Notification from '../models/Notification.js';
 import { asyncHandler, ApiError } from '../middleware/errorHandler.js';
 import APIFeatures from '../utils/apiFeatures.js';
 
@@ -165,9 +167,31 @@ export const deleteIssue = asyncHandler(async (req, res) => {
         throw new ApiError(403, 'Not authorized to delete this issue');
     }
 
-    // Delete associated comments and upvotes
-    await Comment.deleteMany({ issue: req.params.id });
-    await Upvote.deleteMany({ issue: req.params.id });
+    // Get all reports for this issue to notify reporters
+    const reports = await IssueReport.find({ issue: req.params.id }).select('reporter');
+
+    // Notify reporters that the issue was removed
+    const notifyPromises = reports.map(report =>
+        Notification.createNotification({
+            user: report.reporter,
+            type: 'issue_deleted',
+            title: 'Reported Issue Removed',
+            message: `The issue "${issue.title}" that you reported has been removed by ${isOwner ? 'its owner' : 'an administrator'}.`,
+            data: {
+                issueId: issue._id,
+                issueTitle: issue.title,
+                deletedBy: isOwner ? 'owner' : 'admin'
+            }
+        }).catch(err => console.error('Failed to create notification:', err))
+    );
+
+    // Delete associated data
+    await Promise.all([
+        Comment.deleteMany({ issue: req.params.id }),
+        Upvote.deleteMany({ issue: req.params.id }),
+        IssueReport.deleteMany({ issue: req.params.id }),
+        ...notifyPromises
+    ]);
 
     // Delete the issue
     await Issue.findByIdAndDelete(req.params.id);

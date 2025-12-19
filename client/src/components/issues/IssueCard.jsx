@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { MapPin, MessageCircle, ArrowUp, Clock, User } from 'lucide-react';
+import { MapPin, MessageCircle, ArrowUp, Clock, Flag } from 'lucide-react';
 import StatusBadge from '../common/StatusBadge';
+import ReportIssueModal from './ReportIssueModal';
 import { useUpvote } from '../../hooks/useUpvote';
 import { useUserContext } from '../../context/UserContext';
 import {
@@ -15,13 +17,15 @@ import {
  * Social-media style card for displaying issues in the feed
  */
 const IssueCard = ({ issue }) => {
-    const { isSignedIn } = useUserContext();
+    const { isSignedIn, user } = useUserContext();
     const { upvoted, count, loading, toggleUpvote } = useUpvote(
         issue._id,
         issue.upvotesCount
     );
+    const [reportModalOpen, setReportModalOpen] = useState(false);
 
     const category = categoryConfig[issue.category] || categoryConfig.other;
+    const isOwnIssue = user && issue.createdBy?._id === user._id;
 
     return (
         <div className="bg-dark-800 rounded-xl border border-dark-700 overflow-hidden card-hover">
@@ -108,8 +112,8 @@ const IssueCard = ({ issue }) => {
                         }}
                         disabled={loading || !isSignedIn}
                         className={`flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all duration-200 ${upvoted
-                                ? 'bg-primary-600/20 text-primary-400'
-                                : 'text-dark-400 hover:bg-dark-700 hover:text-white'
+                            ? 'bg-primary-600/20 text-primary-400'
+                            : 'text-dark-400 hover:bg-dark-700 hover:text-white'
                             } ${!isSignedIn && 'opacity-50 cursor-not-allowed'}`}
                         title={isSignedIn ? 'Upvote this issue' : 'Sign in to upvote'}
                     >
@@ -129,6 +133,20 @@ const IssueCard = ({ issue }) => {
                         <span className="text-sm font-medium">{issue.commentsCount || 0}</span>
                     </Link>
 
+                    {/* Report Button */}
+                    {isSignedIn && !isOwnIssue && (
+                        <button
+                            onClick={(e) => {
+                                e.preventDefault();
+                                setReportModalOpen(true);
+                            }}
+                            className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-dark-400 hover:bg-red-500/10 hover:text-red-400 transition-all duration-200"
+                            title="Report this issue"
+                        >
+                            <Flag size={16} />
+                        </button>
+                    )}
+
                     {/* View Details */}
                     <Link
                         to={`/issues/${issue._id}`}
@@ -138,6 +156,14 @@ const IssueCard = ({ issue }) => {
                     </Link>
                 </div>
             </div>
+
+            {/* Report Modal */}
+            <ReportIssueModal
+                isOpen={reportModalOpen}
+                onClose={() => setReportModalOpen(false)}
+                issueId={issue._id}
+                issueTitle={issue.title}
+            />
         </div>
     );
 };

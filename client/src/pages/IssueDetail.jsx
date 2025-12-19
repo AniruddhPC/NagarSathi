@@ -10,7 +10,8 @@ import {
     Clock,
     Image as ImageIcon,
     CheckCircle,
-    AlertTriangle
+    AlertTriangle,
+    Flag
 } from 'lucide-react';
 import Navbar from '../components/common/Navbar';
 import Footer from '../components/common/Footer';
@@ -20,6 +21,7 @@ import Loader, { PageLoader } from '../components/common/Loader';
 import Modal from '../components/common/Modal';
 import StatusTimeline from '../components/issues/StatusTimeline';
 import CommentSection from '../components/issues/CommentSection';
+import ReportIssueModal from '../components/issues/ReportIssueModal';
 import { useUpvote } from '../hooks/useUpvote';
 import { useUserContext } from '../context/UserContext';
 import { issueApi } from '../services/api';
@@ -46,6 +48,7 @@ const IssueDetail = () => {
     const [activeImage, setActiveImage] = useState(0);
     const [deleting, setDeleting] = useState(false);
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [reportModalOpen, setReportModalOpen] = useState(false);
 
     const { upvoted, count, toggleUpvote, loading: upvoteLoading } = useUpvote(
         id,
@@ -188,6 +191,17 @@ const IssueDetail = () => {
                                 <Button variant="secondary" icon={Share2} onClick={handleShare}>
                                     Share
                                 </Button>
+
+                                {/* Report Button */}
+                                {isSignedIn && !isOwner && (
+                                    <Button
+                                        variant="secondary"
+                                        icon={Flag}
+                                        onClick={() => setReportModalOpen(true)}
+                                    >
+                                        Report
+                                    </Button>
+                                )}
 
                                 {canDelete && (
                                     <Button
@@ -396,6 +410,14 @@ const IssueDetail = () => {
                     </div>
                 </div>
             </Modal>
+
+            {/* Report Issue Modal */}
+            <ReportIssueModal
+                isOpen={reportModalOpen}
+                onClose={() => setReportModalOpen(false)}
+                issueId={id}
+                issueTitle={issue?.title}
+            />
         </div>
     );
 };

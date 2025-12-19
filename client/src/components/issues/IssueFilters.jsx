@@ -7,8 +7,9 @@ import { issueApi } from '../../services/api';
 /**
  * Issue Filters Component
  * Sidebar-style filter panel with multi-select for states
+ * @param {boolean} hideCounts - If true, hides the counts (useful when used in Reports tab)
  */
-const IssueFilters = ({ params, onFilterChange, onReset }) => {
+const IssueFilters = ({ params, onFilterChange, onReset, hideCounts = false }) => {
     const [expandedSections, setExpandedSections] = useState({
         states: true,
         districts: true,
@@ -26,8 +27,10 @@ const IssueFilters = ({ params, onFilterChange, onReset }) => {
         statuses: {},
     });
 
-    // Fetch filter counts on mount and when filters change (optional, but good for real-time feel)
+    // Fetch filter counts on mount (skip if hideCounts is true)
     useEffect(() => {
+        if (hideCounts) return;
+
         const fetchCounts = async () => {
             try {
                 const response = await issueApi.getFilterCounts();
@@ -40,7 +43,7 @@ const IssueFilters = ({ params, onFilterChange, onReset }) => {
         };
 
         fetchCounts();
-    }, []);
+    }, [hideCounts]);
 
     // Process states data from JSON - create value/label pairs for dropdowns
     const states = useMemo(() => {
@@ -224,7 +227,7 @@ const IssueFilters = ({ params, onFilterChange, onReset }) => {
                                     />
                                     <span className="text-sm text-dark-300 group-hover:text-white transition-colors flex items-center justify-between flex-1">
                                         <span>{state.label}</span>
-                                        {filterCounts.states[state.value] > 0 && (
+                                        {!hideCounts && filterCounts.states[state.value] > 0 && (
                                             <span className="text-xs text-dark-500 group-hover:text-dark-400 bg-dark-700 group-hover:bg-dark-600 px-1.5 py-0.5 rounded-full">
                                                 {filterCounts.states[state.value]}
                                             </span>
@@ -273,7 +276,7 @@ const IssueFilters = ({ params, onFilterChange, onReset }) => {
                                         />
                                         <span className="text-sm text-dark-300 group-hover:text-white transition-colors flex items-center justify-between flex-1">
                                             <span>{district.label}</span>
-                                            {filterCounts.districts[district.value] > 0 && (
+                                            {!hideCounts && filterCounts.districts[district.value] > 0 && (
                                                 <span className="text-xs text-dark-500 group-hover:text-dark-400 bg-dark-700 group-hover:bg-dark-600 px-1.5 py-0.5 rounded-full">
                                                     {filterCounts.districts[district.value]}
                                                 </span>
@@ -322,7 +325,7 @@ const IssueFilters = ({ params, onFilterChange, onReset }) => {
                                     />
                                     <span className="text-sm text-dark-300 group-hover:text-white transition-colors flex items-center justify-between flex-1">
                                         <span>{cat.label}</span>
-                                        {filterCounts.categories[cat.value] > 0 && (
+                                        {!hideCounts && filterCounts.categories[cat.value] > 0 && (
                                             <span className="text-xs text-dark-500 group-hover:text-dark-400 bg-dark-700 group-hover:bg-dark-600 px-1.5 py-0.5 rounded-full">
                                                 {filterCounts.categories[cat.value]}
                                             </span>
@@ -362,7 +365,7 @@ const IssueFilters = ({ params, onFilterChange, onReset }) => {
                                     />
                                     <span className="text-sm text-dark-300 group-hover:text-white transition-colors flex items-center justify-between flex-1">
                                         <span>{status.label}</span>
-                                        {filterCounts.statuses[status.value] > 0 && (
+                                        {!hideCounts && filterCounts.statuses[status.value] > 0 && (
                                             <span className="text-xs text-dark-500 group-hover:text-dark-400 bg-dark-700 group-hover:bg-dark-600 px-1.5 py-0.5 rounded-full">
                                                 {filterCounts.statuses[status.value]}
                                             </span>

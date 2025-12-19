@@ -6,6 +6,12 @@ import {
     getAnalytics,
     getAllUsers,
     updateUserRole,
+    getAllReports,
+    getGroupedReports,
+    getReportById,
+    reviewReport,
+    dismissReport,
+    getReportAnalytics,
 } from '../controllers/adminController.js';
 import { requireAuth } from '../middleware/auth.js';
 import { requireAdmin } from '../middleware/roleCheck.js';
@@ -28,6 +34,14 @@ router.get('/issues', getAllIssues);
 router.put('/issues/:id/status', updateIssueStatus);
 router.post('/issues/:id/resolve', uploadResolutionImages, resolveIssue);
 
+// Report management
+router.get('/reports', getAllReports);
+router.get('/reports/grouped', getGroupedReports);
+router.get('/reports/analytics', getReportAnalytics);
+router.get('/reports/:id', getReportById);
+router.put('/reports/:id/review', reviewReport);
+router.delete('/reports/:id', dismissReport);
+
 // Analytics
 router.get('/analytics', getAnalytics);
 
@@ -36,3 +50,4 @@ router.get('/users', getAllUsers);
 router.put('/users/:id/role', updateUserRole);
 
 export default router;
+
