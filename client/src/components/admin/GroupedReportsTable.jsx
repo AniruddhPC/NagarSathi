@@ -51,6 +51,7 @@ const GroupedReportsTable = ({
     loading = false,
 }) => {
     const [expandedIssues, setExpandedIssues] = useState({});
+    const [showStatsDetails, setShowStatsDetails] = useState(false);
 
     const toggleExpand = (issueId) => {
         setExpandedIssues((prev) => ({
@@ -83,27 +84,31 @@ const GroupedReportsTable = ({
 
     return (
         <div className="space-y-4">
-            {/* Stats Bar */}
+            {/* Stats Bar - Cases with reports breakdown */}
             {stats.totalIssuesReported > 0 && (
                 <div className="flex flex-wrap items-center gap-4 p-4 bg-dark-800 border border-dark-700 rounded-xl">
                     <div className="flex items-center gap-2">
                         <Flag size={16} className="text-primary-400" />
                         <span className="text-sm text-dark-300">
-                            <strong className="text-white">{stats.totalReports}</strong> total reports
+                            <strong className="text-white text-lg">{stats.totalIssuesReported}</strong> {stats.totalIssuesReported === 1 ? 'case' : 'cases'}
                         </span>
                     </div>
-                    <div className="w-px h-4 bg-dark-600" />
-                    <div className="text-sm text-dark-300">
-                        <strong className="text-white">{stats.totalIssuesReported}</strong> issues reported
+                    <div className="flex items-center gap-4 ml-auto">
+                        <div className="text-center px-3">
+                            <p className="text-sm font-bold text-white">{stats.totalReports || 0}</p>
+                            <p className="text-xs text-dark-400">Reports</p>
+                        </div>
+                        <div className="w-px h-8 bg-dark-600" />
+                        <div className="text-center px-3">
+                            <p className="text-sm font-bold text-amber-400">{groupedReports.reduce((acc, g) => acc + g.pendingCount, 0)}</p>
+                            <p className="text-xs text-dark-400">Pending</p>
+                        </div>
+                        <div className="w-px h-8 bg-dark-600" />
+                        <div className="text-center px-3">
+                            <p className="text-sm font-bold text-emerald-400">{stats.totalReports - groupedReports.reduce((acc, g) => acc + g.pendingCount, 0)}</p>
+                            <p className="text-xs text-dark-400">Reviewed</p>
+                        </div>
                     </div>
-                    {stats.multipleReports > 0 && (
-                        <>
-                            <div className="w-px h-4 bg-dark-600" />
-                            <div className="text-sm text-amber-400">
-                                <strong>{stats.multipleReports}</strong> with multiple reports
-                            </div>
-                        </>
-                    )}
                 </div>
             )}
 

@@ -8,6 +8,7 @@ import {
     Users,
     MapPin,
     Activity,
+    Flag,
 } from 'lucide-react';
 import {
     AreaChart,
@@ -30,7 +31,7 @@ import { formatNumber } from '../../utils/helpers';
  * Analytics Widgets Component
  * Enhanced dashboard with charts and dynamic visualizations
  */
-const AnalyticsWidgets = ({ data }) => {
+const AnalyticsWidgets = ({ data, reportAnalytics }) => {
     if (!data) return null;
 
     const { overview, statusBreakdown, categoryBreakdown, trendingIssues, hotspots, issuesOverTime } = data;
@@ -84,6 +85,36 @@ const AnalyticsWidgets = ({ data }) => {
             name: cat._id?.replace('_', ' ') || 'Unknown',
             count: cat.count,
         })) || [], [categoryBreakdown]);
+
+    // Prepare data for Fake Reports Pie Chart from real API data
+    const fakeReportsPieData = useMemo(() => {
+        if (!reportAnalytics?.reasonBreakdown) {
+            return [];
+        }
+        const colorMap = {
+            spam: '#ef4444',
+            inaccurate: '#f59e0b',
+            duplicate: '#8b5cf6',
+            inappropriate: '#ec4899',
+            already_resolved: '#10b981',
+            other: '#6b7280',
+        };
+        const labelMap = {
+            spam: 'Spam',
+            inaccurate: 'Inaccurate',
+            duplicate: 'Duplicate',
+            inappropriate: 'Inappropriate',
+            already_resolved: 'Already Resolved',
+            other: 'Other',
+        };
+        return reportAnalytics.reasonBreakdown
+            .filter(item => item.count > 0)
+            .map(item => ({
+                name: labelMap[item._id] || item._id,
+                value: item.count,
+                color: colorMap[item._id] || '#6b7280',
+            }));
+    }, [reportAnalytics]);
 
     // Prepare trend data from API issuesOverTime with status breakdown
     const trendData = useMemo(() => {
@@ -148,6 +179,34 @@ const AnalyticsWidgets = ({ data }) => {
                         )}
                     </div>
                 ))}
+            </div>
+
+            {/* Quick Stats Overview */}
+            <div className="bg-dark-800 border border-dark-700 rounded-xl p-5">
+                <div className="flex flex-wrap items-center justify-between gap-4">
+                    <div>
+                        <h3 className="text-white font-semibold mb-1">Quick Overview</h3>
+                        <p className="text-dark-300 text-sm">
+                            {overview?.totalIssues || 0} total issues • {statusBreakdown?.in_progress || 0} in progress • {overview?.resolutionRate || 0}% resolved
+                        </p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <div className="text-center">
+                            <p className="text-2xl font-bold text-emerald-400">{statusBreakdown?.resolved || 0}</p>
+                            <p className="text-xs text-dark-400">Resolved</p>
+                        </div>
+                        <div className="w-px h-10 bg-dark-600" />
+                        <div className="text-center">
+                            <p className="text-2xl font-bold text-amber-400">{statusBreakdown?.in_progress || 0}</p>
+                            <p className="text-xs text-dark-400">In Progress</p>
+                        </div>
+                        <div className="w-px h-10 bg-dark-600" />
+                        <div className="text-center">
+                            <p className="text-2xl font-bold text-red-400">{statusBreakdown?.reported || 0}</p>
+                            <p className="text-xs text-dark-400">Pending</p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             {/* Charts Row */}
@@ -294,6 +353,116 @@ const AnalyticsWidgets = ({ data }) => {
                 </div>
             </div>
 
+            {/* Fake Reports Chart */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Fake Reports by Reason Pie Chart */}
+                <div className="bg-dark-800 border border-dark-700 rounded-xl p-5">
+                    <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                        <Flag size={20} className="text-red-400" />
+                        Fake Reports by Reason
+                    </h3>
+                    <div className="h-64 w-full min-w-0">
+                        {fakeReportsPieData.length > 0 ? (
+                            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0} debounce={50}>
+                                <PieChart>
+                                    <Pie
+                                        data={fakeReportsPieData}
+                                        cx="50%"
+                                        cy="50%"
+                                        innerRadius={50}
+                                        outerRadius={80}
+                                        paddingAngle={5}
+                                        dataKey="value"
+                                    >
+                                        {fakeReportsPieData.map((entry, index) => (
+                                            <Cell key={`fake-cell-${index}`} fill={entry.color} />
+                                        ))}
+                                    </Pie>
+                                    <Tooltip
+                                        contentStyle={{
+                                            backgroundColor: '#1e293b',
+                                            border: '1px solid #334155',
+                                            borderRadius: '8px'
+                                        }}
+                                    />
+                                    <Legend
+                                        formatter={(value) => <span className="text-dark-200 text-sm">{value}</span>}
+                                    />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        ) : (
+                            <div className="h-full flex items-center justify-center text-dark-400">
+                                <p>No report data available</p>
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* Report Statistics */}
+                <div className="bg-dark-800 border border-dark-700 rounded-xl p-5">
+                    <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                        <AlertCircle size={20} className="text-amber-400" />
+                        Report Statistics
+                    </h3>
+                    <div className="space-y-3">
+                        {/* Cases vs Reports Section */}
+                        <div className="grid grid-cols-2 gap-3">
+                            {/* Cases Column */}
+                            <div className="bg-dark-700/50 rounded-lg p-3">
+                                <p className="text-xs text-dark-500 uppercase tracking-wide mb-2">Cases (Issues)</p>
+                                <div className="space-y-2">
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-sm text-dark-300">Active</span>
+                                        <span className="text-lg font-bold text-white">{reportAnalytics?.overview?.activeCases || 0}</span>
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-sm text-dark-300">Pending</span>
+                                        <span className="text-lg font-bold text-amber-400">{reportAnalytics?.overview?.pendingCases || 0}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            {/* Reports Column */}
+                            <div className="bg-dark-700/50 rounded-lg p-3">
+                                <p className="text-xs text-dark-500 uppercase tracking-wide mb-2">Reports (Total)</p>
+                                <div className="space-y-2">
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-sm text-dark-300">Active</span>
+                                        <span className="text-lg font-bold text-white">{reportAnalytics?.overview?.activeReports || 0}</span>
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-sm text-dark-300">Pending</span>
+                                        <span className="text-lg font-bold text-amber-400">{reportAnalytics?.overview?.pendingReports || 0}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Resolved Stats Section */}
+                        <div className="pt-3 border-t border-dark-600">
+                            <p className="text-xs text-dark-500 uppercase tracking-wide mb-3">Resolved Cases</p>
+                            <div className="grid grid-cols-2 gap-2">
+                                <div className="p-2 bg-dark-700/30 rounded-lg text-center">
+                                    <p className="text-lg font-bold text-emerald-400">{reportAnalytics?.resolved?.total || 0}</p>
+                                    <p className="text-xs text-dark-400">Total Resolved</p>
+                                </div>
+                                <div className="p-2 bg-dark-700/30 rounded-lg text-center">
+                                    <p className="text-lg font-bold text-red-400">{reportAnalytics?.resolved?.issuesDeleted || 0}</p>
+                                    <p className="text-xs text-dark-400">Issues Deleted</p>
+                                </div>
+                                <div className="p-2 bg-dark-700/30 rounded-lg text-center">
+                                    <p className="text-lg font-bold text-blue-400">{reportAnalytics?.resolved?.reviewed || 0}</p>
+                                    <p className="text-xs text-dark-400">Reviewed</p>
+                                </div>
+                                <div className="p-2 bg-dark-700/30 rounded-lg text-center">
+                                    <p className="text-lg font-bold text-dark-400">{reportAnalytics?.resolved?.dismissed || 0}</p>
+                                    <p className="text-xs text-dark-400">Dismissed</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {/* Trending Issues & Hotspots */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Trending Issues */}
@@ -390,34 +559,6 @@ const AnalyticsWidgets = ({ data }) => {
                             <p>No hotspot data available.</p>
                         </div>
                     )}
-                </div>
-            </div>
-
-            {/* Quick Stats Footer */}
-            <div className="bg-gradient-to-r from-primary-600/20 to-primary-500/10 border border-primary-500/30 rounded-xl p-5">
-                <div className="flex flex-wrap items-center justify-between gap-4">
-                    <div>
-                        <h3 className="text-white font-semibold mb-1">Quick Overview</h3>
-                        <p className="text-dark-300 text-sm">
-                            {overview?.totalIssues || 0} total issues • {statusBreakdown?.in_progress || 0} in progress • {overview?.resolutionRate || 0}% resolved
-                        </p>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <div className="text-center">
-                            <p className="text-2xl font-bold text-emerald-400">{statusBreakdown?.resolved || 0}</p>
-                            <p className="text-xs text-dark-400">Resolved</p>
-                        </div>
-                        <div className="w-px h-10 bg-dark-600" />
-                        <div className="text-center">
-                            <p className="text-2xl font-bold text-amber-400">{statusBreakdown?.in_progress || 0}</p>
-                            <p className="text-xs text-dark-400">In Progress</p>
-                        </div>
-                        <div className="w-px h-10 bg-dark-600" />
-                        <div className="text-center">
-                            <p className="text-2xl font-bold text-red-400">{statusBreakdown?.reported || 0}</p>
-                            <p className="text-xs text-dark-400">Pending</p>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

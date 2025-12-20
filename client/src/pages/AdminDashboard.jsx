@@ -82,6 +82,17 @@ const AdminDashboard = () => {
         }
     };
 
+    // Fetch report analytics
+    const [reportAnalytics, setReportAnalytics] = useState(null);
+    const fetchReportAnalytics = async () => {
+        try {
+            const response = await adminApi.getReportAnalytics({ days: 30 });
+            setReportAnalytics(response.data.data);
+        } catch (error) {
+            console.error('Failed to fetch report analytics:', error);
+        }
+    };
+
     // Fetch grouped reports
     const fetchReports = async () => {
         try {
@@ -109,6 +120,7 @@ const AdminDashboard = () => {
         if (isAdmin) {
             fetchIssues();
             fetchAnalytics();
+            fetchReportAnalytics();
             fetchReports();
         }
     }, [isAdmin, params]);
@@ -466,23 +478,6 @@ const AdminDashboard = () => {
                                             <option value="5">5+ Reports</option>
                                         </select>
                                     </div>
-
-                                    {/* Report Status Filter */}
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-sm text-dark-400">Status:</span>
-                                        {['', 'pending'].map((status) => (
-                                            <button
-                                                key={status || 'all'}
-                                                onClick={() => setReportsParams((prev) => ({ ...prev, status: status || undefined, page: 1 }))}
-                                                className={`px-3 py-1.5 text-sm rounded-lg transition-all ${(reportsParams.status === status) || (!reportsParams.status && status === '')
-                                                    ? 'bg-primary-600 text-white'
-                                                    : 'bg-dark-700 text-dark-300 hover:bg-dark-600'
-                                                    }`}
-                                            >
-                                                {status === '' ? 'All' : 'Pending Only'}
-                                            </button>
-                                        ))}
-                                    </div>
                                 </div>
 
                                 {/* Grouped Reports Table */}
@@ -502,7 +497,7 @@ const AdminDashboard = () => {
                 {activeTab === 'analytics' && (
                     <div className="flex-1 overflow-y-auto scrollbar-hide w-full">
                         <div className="max-w-7xl mx-auto w-full">
-                            <AnalyticsWidgets data={analytics} />
+                            <AnalyticsWidgets data={analytics} reportAnalytics={reportAnalytics} />
                         </div>
                     </div>
                 )}

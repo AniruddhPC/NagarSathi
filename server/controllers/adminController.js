@@ -1,6 +1,7 @@
 import Issue from '../models/Issue.js';
 import User from '../models/User.js';
 import IssueReport from '../models/IssueReport.js';
+import ReportStats from '../models/ReportStats.js';
 import Notification from '../models/Notification.js';
 import { asyncHandler, ApiError } from '../middleware/errorHandler.js';
 import APIFeatures from '../utils/apiFeatures.js';
@@ -613,8 +614,19 @@ export const getGroupedReports = asyncHandler(async (req, res) => {
 
     const groupedReports = await IssueReport.aggregate(pipeline);
 
-    // Get overall stats
+    // Get overall stats - only count reports for issues that still exist
     const stats = await IssueReport.aggregate([
+        // First, lookup to check if issue exists
+        {
+            $lookup: {
+                from: 'issues',
+                localField: 'issue',
+                foreignField: '_id',
+                as: 'issueData'
+            }
+        },
+        // Only keep reports where the issue still exists
+        { $match: { issueData: { $ne: [] } } },
         {
             $group: {
                 _id: '$issue',
@@ -743,6 +755,9 @@ export const reviewReport = asyncHandler(async (req, res) => {
             await Issue.findByIdAndDelete(report.issue._id);
         }
 
+        // Track stats for action_taken with issue deletion
+        await ReportStats.incrementStats('action_taken', report.reason, true);
+
         res.status(200).json({
             success: true,
             message: 'Report reviewed and issue deleted',
@@ -766,6 +781,9 @@ export const reviewReport = asyncHandler(async (req, res) => {
             });
         }
     }
+
+    // Track stats before deleting (reviewed or dismissed)
+    await ReportStats.incrementStats(status, report.reason, false);
 
     // Delete the report after it's been reviewed (auto-cleanup)
     await IssueReport.findByIdAndDelete(report._id);
@@ -810,24 +828,122 @@ export const getReportAnalytics = asyncHandler(async (req, res) => {
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - days);
 
-    // Total counts
+    // Total counts (all reports including orphaned)
     const totalReports = await IssueReport.countDocuments();
-    const pendingReports = await IssueReport.countDocuments({ status: 'pending' });
 
-    // Reports by reason
+    // Count orphaned reports (reports for deleted issues)
+    const orphanedReportsAgg = await IssueReport.aggregate([
+        {
+            $lookup: {
+                from: 'issues',
+                localField: 'issue',
+                foreignField: '_id',
+                as: 'issueData'
+            }
+        },
+        {
+            $match: { issueData: { $size: 0 } }
+        },
+        { $count: 'count' }
+    ]);
+    const orphanedReports = orphanedReportsAgg[0]?.count || 0;
+
+    // Active reports (reports for issues that still exist)
+    const activeReports = totalReports - orphanedReports;
+
+    // Count active cases (unique issues with active reports)
+    const activeCasesAgg = await IssueReport.aggregate([
+        {
+            $lookup: {
+                from: 'issues',
+                localField: 'issue',
+                foreignField: '_id',
+                as: 'issueData'
+            }
+        },
+        { $match: { issueData: { $ne: [] } } },
+        { $group: { _id: '$issue' } },
+        { $count: 'count' }
+    ]);
+    const activeCases = activeCasesAgg[0]?.count || 0;
+
+    // Count pending reports (only for issues that still exist)
+    const pendingReportsAgg = await IssueReport.aggregate([
+        {
+            $match: { status: 'pending' }
+        },
+        {
+            $lookup: {
+                from: 'issues',
+                localField: 'issue',
+                foreignField: '_id',
+                as: 'issueData'
+            }
+        },
+        { $match: { issueData: { $ne: [] } } },
+        { $count: 'count' }
+    ]);
+    const pendingReports = pendingReportsAgg[0]?.count || 0;
+
+    // Count pending cases (unique issues with pending reports)
+    const pendingCasesAgg = await IssueReport.aggregate([
+        {
+            $match: { status: 'pending' }
+        },
+        {
+            $lookup: {
+                from: 'issues',
+                localField: 'issue',
+                foreignField: '_id',
+                as: 'issueData'
+            }
+        },
+        { $match: { issueData: { $ne: [] } } },
+        { $group: { _id: '$issue' } },
+        { $count: 'count' }
+    ]);
+    const pendingCases = pendingCasesAgg[0]?.count || 0;
+
+    // Reports by reason (only for active reports - issues that exist)
     const reasonCounts = await IssueReport.aggregate([
+        {
+            $lookup: {
+                from: 'issues',
+                localField: 'issue',
+                foreignField: '_id',
+                as: 'issueData'
+            }
+        },
+        { $match: { issueData: { $ne: [] } } },
         { $group: { _id: '$reason', count: { $sum: 1 } } },
         { $sort: { count: -1 } }
     ]);
 
-    // Reports by status
+    // Reports by status (only for active reports)
     const statusCounts = await IssueReport.aggregate([
+        {
+            $lookup: {
+                from: 'issues',
+                localField: 'issue',
+                foreignField: '_id',
+                as: 'issueData'
+            }
+        },
+        { $match: { issueData: { $ne: [] } } },
         { $group: { _id: '$status', count: { $sum: 1 } } }
     ]);
 
-    // Reports over time
+    // Reports over time (only for active reports)
     const reportsOverTime = await IssueReport.aggregate([
-        { $match: { createdAt: { $gte: startDate } } },
+        {
+            $lookup: {
+                from: 'issues',
+                localField: 'issue',
+                foreignField: '_id',
+                as: 'issueData'
+            }
+        },
+        { $match: { issueData: { $ne: [] }, createdAt: { $gte: startDate } } },
         {
             $group: {
                 _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
@@ -837,8 +953,17 @@ export const getReportAnalytics = asyncHandler(async (req, res) => {
         { $sort: { _id: 1 } }
     ]);
 
-    // Most reported issues
+    // Most reported issues (only for existing issues)
     const mostReportedIssues = await IssueReport.aggregate([
+        {
+            $lookup: {
+                from: 'issues',
+                localField: 'issue',
+                foreignField: '_id',
+                as: 'issueData'
+            }
+        },
+        { $match: { issueData: { $ne: [] } } },
         { $group: { _id: '$issue', reportCount: { $sum: 1 } } },
         { $sort: { reportCount: -1 } },
         { $limit: 10 },
@@ -862,16 +987,52 @@ export const getReportAnalytics = asyncHandler(async (req, res) => {
         }
     ]);
 
+    // Count reviewed today (for active reports)
+    const reviewedTodayAgg = await IssueReport.aggregate([
+        {
+            $lookup: {
+                from: 'issues',
+                localField: 'issue',
+                foreignField: '_id',
+                as: 'issueData'
+            }
+        },
+        {
+            $match: {
+                issueData: { $ne: [] },
+                reviewedAt: { $gte: new Date(new Date().setHours(0, 0, 0, 0)) }
+            }
+        },
+        { $count: 'count' }
+    ]);
+    const reviewedToday = reviewedTodayAgg[0]?.count || 0;
+
+    // Get cumulative resolved stats
+    const resolvedStats = await ReportStats.getStats();
+
     res.status(200).json({
         success: true,
         data: {
             overview: {
+                // Cases = unique issues with reports
+                activeCases,
+                pendingCases,
+                // Reports = individual report submissions
                 totalReports,
+                activeReports,
+                orphanedReports,
                 pendingReports,
-                reviewedToday: await IssueReport.countDocuments({
-                    reviewedAt: { $gte: new Date().setHours(0, 0, 0, 0) }
-                }),
+                reviewedToday,
             },
+            // Cumulative resolved stats (historical)
+            resolved: {
+                total: resolvedStats.totalResolved,
+                dismissed: resolvedStats.dismissed,
+                reviewed: resolvedStats.reviewed,
+                actionTaken: resolvedStats.actionTaken,
+                issuesDeleted: resolvedStats.issuesDeleted,
+            },
+            resolvedByReason: resolvedStats.reasonStats,
             reasonBreakdown: reasonCounts,
             statusBreakdown: statusCounts.reduce((acc, curr) => {
                 acc[curr._id] = curr.count;
