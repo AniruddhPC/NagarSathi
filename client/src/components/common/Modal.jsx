@@ -1,10 +1,12 @@
 import { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { cn } from '../../utils/helpers';
 
 /**
  * Modal Component
  * Centered modal with backdrop
+ * Uses React Portal to render outside parent DOM hierarchy
  */
 const Modal = ({
     isOpen,
@@ -49,7 +51,7 @@ const Modal = ({
         full: 'max-w-[95vw]',
     };
 
-    return (
+    const modalContent = (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             {/* Backdrop */}
             <div
@@ -60,14 +62,14 @@ const Modal = ({
             {/* Modal Content */}
             <div
                 className={cn(
-                    'relative w-full bg-dark-800 rounded-2xl shadow-xl border border-dark-700 animate-fade-in',
+                    'relative w-full bg-dark-800 rounded-2xl shadow-xl border border-dark-700 animate-fade-in max-h-[90vh] overflow-y-auto',
                     sizes[size],
                     className
                 )}
             >
                 {/* Header */}
                 {(title || showCloseButton) && (
-                    <div className="flex items-center justify-between px-6 py-4 border-b border-dark-700">
+                    <div className="flex items-center justify-between px-6 py-4 border-b border-dark-700 sticky top-0 bg-dark-800 z-10">
                         {title && (
                             <h2 className="text-xl font-semibold text-white">{title}</h2>
                         )}
@@ -87,6 +89,10 @@ const Modal = ({
             </div>
         </div>
     );
+
+    // Use portal to render modal to document.body
+    return createPortal(modalContent, document.body);
 };
 
 export default Modal;
+

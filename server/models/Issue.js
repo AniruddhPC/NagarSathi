@@ -153,6 +153,7 @@ issueSchema.index({ upvotesCount: -1 });
 
 // Virtual for formatted creation date
 issueSchema.virtual('createdAtFormatted').get(function () {
+    if (!this.createdAt) return '';
     return this.createdAt.toLocaleDateString('en-IN', {
         day: 'numeric',
         month: 'short',

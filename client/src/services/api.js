@@ -90,6 +90,7 @@ export const userApi = {
 // Issue endpoints
 export const issueApi = {
     getIssues: (params) => api.get('/issues', { params }),
+    getFilterCounts: () => api.get('/issues/filter-counts'),
     getIssueById: (id) => api.get(`/issues/${id}`),
     getIssuesForMap: (params) => api.get('/issues/map', { params }),
     getMyIssues: (params) => api.get('/issues/user/my-issues', { params }),
@@ -120,6 +121,14 @@ export const upvoteApi = {
     getUpvoteCount: (issueId) => api.get(`/issues/${issueId}/upvote/count`),
 };
 
+// Report endpoints (user)
+export const reportApi = {
+    submitReport: (issueId, data) => api.post(`/issues/${issueId}/report`, data),
+    getReportStatus: (issueId) => api.get(`/issues/${issueId}/report/status`),
+    getReportCount: (issueId) => api.get(`/issues/${issueId}/report/count`),
+    getMyReports: (params) => api.get('/reports/my-reports', { params }),
+};
+
 // Admin endpoints
 export const adminApi = {
     getAllIssues: (params) => api.get('/admin/issues', { params }),
@@ -131,6 +140,26 @@ export const adminApi = {
     getAnalytics: (params) => api.get('/admin/analytics', { params }),
     getAllUsers: (params) => api.get('/admin/users', { params }),
     updateUserRole: (id, role) => api.put(`/admin/users/${id}/role`, { role }),
+    deleteIssue: (id) => api.delete(`/issues/${id}`),
+    // Report management
+    getAllReports: (params) => api.get('/admin/reports', { params }),
+    getGroupedReports: (params) => api.get('/admin/reports/grouped', { params }),
+    getReportById: (id) => api.get(`/admin/reports/${id}`),
+    reviewReport: (id, data) => api.put(`/admin/reports/${id}/review`, data),
+    dismissReport: (id, data) => api.delete(`/admin/reports/${id}`, { data }),
+    getReportAnalytics: (params) => api.get('/admin/reports/analytics', { params }),
+};
+
+// Notification endpoints
+export const notificationApi = {
+    getNotifications: (params) => api.get('/notifications', { params }),
+    getUnreadCount: () => api.get('/notifications/unread-count'),
+    markAsRead: (id) => api.put(`/notifications/${id}/read`),
+    markAllAsRead: () => api.put('/notifications/read-all'),
+    deleteNotification: (id) => api.delete(`/notifications/${id}`),
+    clearAll: () => api.delete('/notifications'),
 };
 
 export default api;
+
+

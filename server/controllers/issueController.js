@@ -1,6 +1,8 @@
 import Issue from '../models/Issue.js';
 import Comment from '../models/Comment.js';
 import Upvote from '../models/Upvote.js';
+import IssueReport from '../models/IssueReport.js';
+import Notification from '../models/Notification.js';
 import { asyncHandler, ApiError } from '../middleware/errorHandler.js';
 import APIFeatures from '../utils/apiFeatures.js';
 
@@ -77,13 +79,32 @@ export const getIssues = asyncHandler(async (req, res) => {
         .populate('createdBy', 'name avatar')
         .lean();
 
+    // Get reports count for each issue
+    const issueIds = issues.map(issue => issue._id);
+    const reportsCounts = await IssueReport.aggregate([
+        { $match: { issue: { $in: issueIds }, status: 'pending' } },
+        { $group: { _id: '$issue', count: { $sum: 1 } } }
+    ]);
+
+    // Create a map of issue ID to reports count
+    const reportsCountMap = {};
+    reportsCounts.forEach(item => {
+        reportsCountMap[item._id.toString()] = item.count;
+    });
+
+    // Add reportsCount to each issue
+    const issuesWithReports = issues.map(issue => ({
+        ...issue,
+        reportsCount: reportsCountMap[issue._id.toString()] || 0
+    }));
+
     res.status(200).json({
         success: true,
-        count: issues.length,
+        count: issuesWithReports.length,
         total,
         page: features.page,
         pages: Math.ceil(total / features.limit),
-        data: issues,
+        data: issuesWithReports,
     });
 });
 
@@ -165,9 +186,31 @@ export const deleteIssue = asyncHandler(async (req, res) => {
         throw new ApiError(403, 'Not authorized to delete this issue');
     }
 
-    // Delete associated comments and upvotes
-    await Comment.deleteMany({ issue: req.params.id });
-    await Upvote.deleteMany({ issue: req.params.id });
+    // Get all reports for this issue to notify reporters
+    const reports = await IssueReport.find({ issue: req.params.id }).select('reporter');
+
+    // Notify reporters that the issue was removed
+    const notifyPromises = reports.map(report =>
+        Notification.createNotification({
+            user: report.reporter,
+            type: 'issue_deleted',
+            title: 'Reported Issue Removed',
+            message: `The issue "${issue.title}" that you reported has been removed by ${isOwner ? 'its owner' : 'an administrator'}.`,
+            data: {
+                issueId: issue._id,
+                issueTitle: issue.title,
+                deletedBy: isOwner ? 'owner' : 'admin'
+            }
+        }).catch(err => console.error('Failed to create notification:', err))
+    );
+
+    // Delete associated data
+    await Promise.all([
+        Comment.deleteMany({ issue: req.params.id }),
+        Upvote.deleteMany({ issue: req.params.id }),
+        IssueReport.deleteMany({ issue: req.params.id }),
+        ...notifyPromises
+    ]);
 
     // Delete the issue
     await Issue.findByIdAndDelete(req.params.id);
@@ -221,5 +264,62 @@ export const getIssuesForMap = asyncHandler(async (req, res) => {
         success: true,
         count: issues.length,
         data: issues,
+    });
+});
+
+// @desc    Get filter counts (issue counts per state, district, category, status)
+// @route   GET /api/issues/filter-counts
+// @access  Public
+export const getFilterCounts = asyncHandler(async (req, res) => {
+    // Get counts by state
+    const stateCounts = await Issue.aggregate([
+        { $match: { state: { $exists: true, $ne: '' } } },
+        { $group: { _id: '$state', count: { $sum: 1 } } },
+        { $sort: { count: -1 } },
+    ]);
+
+    // Get counts by district
+    const districtCounts = await Issue.aggregate([
+        { $match: { district: { $exists: true, $ne: '' } } },
+        { $group: { _id: '$district', count: { $sum: 1 } } },
+        { $sort: { count: -1 } },
+    ]);
+
+    // Get counts by category
+    const categoryCounts = await Issue.aggregate([
+        { $match: { category: { $exists: true, $ne: '' } } },
+        { $group: { _id: '$category', count: { $sum: 1 } } },
+        { $sort: { count: -1 } },
+    ]);
+
+    // Get counts by status
+    const statusCounts = await Issue.aggregate([
+        { $group: { _id: '$status', count: { $sum: 1 } } },
+        { $sort: { _id: 1 } },
+    ]);
+
+    // Convert arrays to objects for easier lookup
+    const counts = {
+        states: stateCounts.reduce((acc, item) => {
+            acc[item._id] = item.count;
+            return acc;
+        }, {}),
+        districts: districtCounts.reduce((acc, item) => {
+            acc[item._id] = item.count;
+            return acc;
+        }, {}),
+        categories: categoryCounts.reduce((acc, item) => {
+            acc[item._id] = item.count;
+            return acc;
+        }, {}),
+        statuses: statusCounts.reduce((acc, item) => {
+            acc[item._id] = item.count;
+            return acc;
+        }, {}),
+    };
+
+    res.status(200).json({
+        success: true,
+        data: counts,
     });
 });

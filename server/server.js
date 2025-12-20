@@ -11,6 +11,9 @@ import issueRoutes from './routes/issueRoutes.js';
 import commentRoutes from './routes/commentRoutes.js';
 import upvoteRoutes from './routes/upvoteRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
+import geocodeRoutes from './routes/geocodeRoutes.js';
+import reportRoutes from './routes/reportRoutes.js';
+import notificationRoutes from './routes/notificationRoutes.js';
 
 // Import error handlers
 import { notFound, errorHandler } from './middleware/errorHandler.js';
@@ -66,7 +69,11 @@ app.use('/api/users', userRoutes);
 app.use('/api/issues', issueRoutes);
 app.use('/api', commentRoutes); // Comments and upvotes are nested under /api/issues/:issueId
 app.use('/api/issues', upvoteRoutes);
+app.use('/api/issues', reportRoutes); // Reports are nested under /api/issues/:issueId/report
+app.use('/api/reports', reportRoutes); // Also mount at /api/reports for /my-reports
 app.use('/api/admin', adminRoutes);
+app.use('/api/geocode', geocodeRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // ============================================
 // ERROR HANDLING

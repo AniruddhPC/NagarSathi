@@ -2,6 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { SignedIn, SignedOut, UserButton } from '@clerk/clerk-react';
 import { useUserContext } from '../../context/UserContext';
 import { useTheme } from '../../context/ThemeContext';
+import NotificationDropdown from './NotificationDropdown';
 import {
     Home,
     MapPin,
@@ -17,7 +18,7 @@ import { useState } from 'react';
 
 /**
  * Navigation Bar Component
- * Responsive with mobile menu
+ * Responsive with mobile menu (breakpoint at lg/1024px)
  */
 const Navbar = () => {
     const location = useLocation();
@@ -38,10 +39,10 @@ const Navbar = () => {
 
     return (
         <nav className="sticky top-0 z-50 bg-dark-900/80 backdrop-blur-lg border-b border-dark-700">
-            <div className="container-custom">
+            <div className="w-full px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
                     {/* Logo */}
-                    <Link to="/" className="flex items-center space-x-2">
+                    <Link to="/" className="flex items-center space-x-2 flex-shrink-0">
                         <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-700 rounded-xl flex items-center justify-center">
                             <span className="text-white font-bold text-xl">N</span>
                         </div>
@@ -50,8 +51,8 @@ const Navbar = () => {
                         </span>
                     </Link>
 
-                    {/* Desktop Navigation */}
-                    <div className="hidden md:flex items-center space-x-1">
+                    {/* Desktop Navigation - visible at lg (1024px) and up */}
+                    <div className="hidden lg:flex items-center space-x-1">
                         {navLinks.map((link) => {
                             if (link.authRequired) {
                                 return (
@@ -108,10 +109,11 @@ const Navbar = () => {
                         </button>
                     </div>
 
-                    {/* Auth Buttons */}
-                    <div className="flex items-center space-x-4">
+                    {/* Right Side - Auth & Mobile Toggle */}
+                    <div className="flex items-center space-x-2 sm:space-x-4">
+                        {/* Sign In/Up - Always visible for logged out users */}
                         <SignedOut>
-                            <Link to="/sign-in" className="btn-ghost text-sm">
+                            <Link to="/sign-in" className="btn-ghost text-sm hidden sm:inline-flex">
                                 Sign In
                             </Link>
                             <Link to="/sign-up" className="btn-primary text-sm">
@@ -119,8 +121,11 @@ const Navbar = () => {
                             </Link>
                         </SignedOut>
 
+                        {/* Logged in user controls */}
                         <SignedIn>
-                            <div className="hidden md:flex items-center space-x-3">
+                            {/* Notification & User - Desktop (visible at lg and up) */}
+                            <div className="hidden lg:flex items-center space-x-3">
+                                <NotificationDropdown />
                                 {user && (
                                     <span className="text-dark-400 text-sm">
                                         Hi, {user.name?.split(' ')[0]}
@@ -134,84 +139,133 @@ const Navbar = () => {
                                     }}
                                 />
                             </div>
+
+                            {/* Notification Bell - Mobile/Tablet (below lg) */}
+                            <div className="lg:hidden">
+                                <NotificationDropdown />
+                            </div>
                         </SignedIn>
 
-                        {/* Mobile Menu Button */}
+                        {/* Mobile Menu Button - visible below lg */}
                         <button
                             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                            className="md:hidden p-2 text-dark-300 hover:text-white"
+                            className="lg:hidden p-2 text-dark-300 hover:text-white"
                         >
                             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                         </button>
                     </div>
                 </div>
+            </div>
 
-                {/* Mobile Menu */}
-                {mobileMenuOpen && (
-                    <div className="md:hidden py-4 border-t border-dark-700 animate-slide-down">
-                        <div className="flex flex-col space-y-2">
-                            {navLinks.map((link) => {
-                                if (link.authRequired) {
-                                    return (
-                                        <SignedIn key={link.path}>
-                                            <Link
-                                                to={link.path}
-                                                onClick={closeMobileMenu}
-                                                className={`flex items-center space-x-3 px-4 py-3 rounded-lg ${isActive(link.path)
-                                                    ? 'bg-primary-600 text-white'
-                                                    : 'text-dark-300 hover:bg-dark-700'
-                                                    }`}
-                                            >
-                                                <link.icon size={20} />
-                                                <span>{link.label}</span>
-                                            </Link>
-                                        </SignedIn>
-                                    );
-                                }
+            {/* Mobile Menu Overlay */}
+            {mobileMenuOpen && (
+                <div
+                    className="fixed inset-0 bg-black/60 z-[60] lg:hidden"
+                    onClick={closeMobileMenu}
+                />
+            )}
+
+            {/* Mobile Menu Drawer - Slides from right */}
+            <div className={`fixed top-0 right-0 h-screen w-[280px] bg-dark-900 z-[70] transform transition-transform duration-300 ease-in-out lg:hidden ${mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+                }`}>
+                {/* Drawer Header */}
+                <div className="flex items-center justify-between p-4 border-b border-dark-700">
+                    <span className="text-lg font-semibold text-white">Menu</span>
+                    <button
+                        onClick={closeMobileMenu}
+                        className="p-2 rounded-lg text-dark-400 hover:text-white hover:bg-dark-700 transition-colors"
+                    >
+                        <X size={20} />
+                    </button>
+                </div>
+
+                {/* Drawer Content */}
+                <div className="p-4 h-[calc(100%-64px)] overflow-y-auto">
+                    <div className="flex flex-col space-y-2">
+                        {navLinks.map((link) => {
+                            if (link.authRequired) {
                                 return (
-                                    <Link
-                                        key={link.path}
-                                        to={link.path}
-                                        onClick={closeMobileMenu}
-                                        className={`flex items-center space-x-3 px-4 py-3 rounded-lg ${isActive(link.path)
-                                            ? 'bg-primary-600 text-white'
-                                            : 'text-dark-300 hover:bg-dark-700'
-                                            }`}
-                                    >
-                                        <link.icon size={20} />
-                                        <span>{link.label}</span>
-                                    </Link>
+                                    <SignedIn key={link.path}>
+                                        <Link
+                                            to={link.path}
+                                            onClick={closeMobileMenu}
+                                            className={`flex items-center space-x-3 px-4 py-3 rounded-lg ${isActive(link.path)
+                                                ? 'bg-primary-600 text-white'
+                                                : 'text-dark-300 hover:bg-dark-700'
+                                                }`}
+                                        >
+                                            <link.icon size={20} />
+                                            <span>{link.label}</span>
+                                        </Link>
+                                    </SignedIn>
                                 );
-                            })}
-
-                            {isAdmin && (
+                            }
+                            return (
                                 <Link
-                                    to="/admin"
+                                    key={link.path}
+                                    to={link.path}
                                     onClick={closeMobileMenu}
-                                    className={`flex items-center space-x-3 px-4 py-3 rounded-lg ${isActive('/admin')
+                                    className={`flex items-center space-x-3 px-4 py-3 rounded-lg ${isActive(link.path)
                                         ? 'bg-primary-600 text-white'
-                                        : 'text-amber-400 hover:bg-dark-700'
+                                        : 'text-dark-300 hover:bg-dark-700'
                                         }`}
                                 >
-                                    <LayoutDashboard size={20} />
-                                    <span>Admin Dashboard</span>
+                                    <link.icon size={20} />
+                                    <span>{link.label}</span>
                                 </Link>
-                            )}
+                            );
+                        })}
 
-                            <SignedIn>
-                                <div className="flex items-center space-x-3 px-4 py-3 border-t border-dark-700 mt-2 pt-4">
-                                    <UserButton />
-                                    {user && (
-                                        <span className="text-dark-300">{user.name}</span>
-                                    )}
-                                </div>
-                            </SignedIn>
-                        </div>
+                        {isAdmin && (
+                            <Link
+                                to="/admin"
+                                onClick={closeMobileMenu}
+                                className={`flex items-center space-x-3 px-4 py-3 rounded-lg ${isActive('/admin')
+                                    ? 'bg-primary-600 text-white'
+                                    : 'text-amber-400 hover:bg-dark-700'
+                                    }`}
+                            >
+                                <LayoutDashboard size={20} />
+                                <span>Admin Dashboard</span>
+                            </Link>
+                        )}
+
+                        {/* Theme Toggle - Mobile */}
+                        <button
+                            onClick={toggleTheme}
+                            className="flex items-center space-x-3 px-4 py-3 rounded-lg text-dark-300 hover:bg-dark-700 w-full text-left"
+                        >
+                            {isDark ? <Sun size={20} /> : <Moon size={20} />}
+                            <span>{isDark ? 'Light Mode' : 'Dark Mode'}</span>
+                        </button>
+
+                        {/* User Info - Mobile */}
+                        <SignedIn>
+                            <div className="flex items-center space-x-3 px-4 py-3 border-t border-dark-700 mt-4 pt-4">
+                                <UserButton />
+                                {user && (
+                                    <span className="text-dark-300">{user.name}</span>
+                                )}
+                            </div>
+                        </SignedIn>
+
+                        {/* Sign In Link - Mobile (for signed out users) */}
+                        <SignedOut>
+                            <Link
+                                to="/sign-in"
+                                onClick={closeMobileMenu}
+                                className="flex items-center space-x-3 px-4 py-3 rounded-lg text-dark-300 hover:bg-dark-700 border-t border-dark-700 mt-4 pt-4"
+                            >
+                                <User size={20} />
+                                <span>Sign In</span>
+                            </Link>
+                        </SignedOut>
                     </div>
-                )}
+                </div>
             </div>
         </nav>
     );
 };
 
 export default Navbar;
+

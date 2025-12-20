@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Plus, Map, AlertCircle } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { Plus, Map, AlertCircle, MapPin, SlidersHorizontal, X } from 'lucide-react';
 import { SignedIn, SignedOut } from '@clerk/clerk-react';
 import Navbar from '../components/common/Navbar';
 import Footer from '../components/common/Footer';
@@ -9,12 +9,15 @@ import IssueFilters from '../components/issues/IssueFilters';
 import Button from '../components/common/Button';
 import { CardSkeletonList } from '../components/common/Loader';
 import { useIssues } from '../hooks/useIssues';
+import ActionAdSidebar from '../components/home/ActionAdSidebar';
 
 /**
  * Home Page Component
  * Main feed showing all issues
  */
 const Home = () => {
+    const location = useLocation();
+    const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
     const {
         issues,
         loading,
@@ -25,15 +28,52 @@ const Home = () => {
         resetParams,
         goToPage,
         refetch,
-    } = useIssues({ limit: 10 });
+    } = useIssues(location.state?.filters || { limit: 10 });
+
+    // Check if any filters are active
+    const hasActiveFilters = params.category || params.status || params.search || params.state || params.district;
 
     return (
-        <div className="min-h-screen bg-dark-900">
+        <div className="h-screen bg-dark-900 flex flex-col overflow-hidden">
             <Navbar />
 
-            <main className="container-custom py-8">
-                {/* Header */}
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+            {/* Mobile Filter Drawer Overlay */}
+            {mobileFiltersOpen && (
+                <div
+                    className="fixed inset-0 bg-black/60 z-40 lg:hidden"
+                    onClick={() => setMobileFiltersOpen(false)}
+                />
+            )}
+
+            {/* Mobile Filter Drawer */}
+            <div className={`fixed top-0 left-0 h-full w-[300px] bg-dark-900 z-50 transform transition-transform duration-300 ease-in-out lg:hidden ${mobileFiltersOpen ? 'translate-x-0' : '-translate-x-full'
+                }`}>
+                <div className="flex items-center justify-between p-4 border-b border-dark-700">
+                    <h2 className="text-lg font-semibold text-white">Filters</h2>
+                    <button
+                        onClick={() => setMobileFiltersOpen(false)}
+                        className="p-2 rounded-lg text-dark-400 hover:text-white hover:bg-dark-700 transition-colors"
+                    >
+                        <X size={20} />
+                    </button>
+                </div>
+                <div className="p-4 h-[calc(100%-64px)] overflow-y-auto">
+                    <IssueFilters
+                        params={params}
+                        onFilterChange={(newParams) => {
+                            updateParams(newParams);
+                        }}
+                        onReset={() => {
+                            resetParams();
+                            setMobileFiltersOpen(false);
+                        }}
+                    />
+                </div>
+            </div>
+
+            <main className="flex-1 flex flex-col overflow-hidden px-4 sm:px-6 lg:px-8 py-6">
+                {/* Header - Fixed at top */}
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 flex-shrink-0">
                     <div>
                         <h1 className="text-2xl sm:text-3xl font-bold text-white mb-1">
                             Issue Feed
@@ -42,29 +82,47 @@ const Home = () => {
                             {pagination.total} issues reported in your community
                         </p>
                     </div>
-                    <div className="flex items-center gap-3">
-                        <Link to="/map">
-                            <Button variant="secondary" icon={Map}>
-                                Map View
+                    <div className="flex items-center gap-2 md:gap-3">
+                        {/* Mobile Filter Button */}
+                        <button
+                            onClick={() => setMobileFiltersOpen(true)}
+                            className={`lg:hidden flex items-center gap-2 px-3 md:px-4 py-2.5 rounded-xl border transition-all duration-200 ${hasActiveFilters
+                                ? 'bg-primary-600/20 border-primary-500/50 text-primary-400'
+                                : 'bg-dark-800 border-dark-700 text-dark-300 hover:text-white hover:border-dark-600'
+                                }`}
+                        >
+                            <SlidersHorizontal size={18} />
+                            <span className="hidden md:inline">Filters</span>
+                            {hasActiveFilters && (
+                                <span className="w-2 h-2 rounded-full bg-primary-400" />
+                            )}
+                        </button>
+                        <Link to="/map" state={{ filters: params }}>
+                            <Button variant="secondary" icon={Map} className="!px-3 md:!px-4">
+                                <span className="hidden md:inline">Map View</span>
                             </Button>
                         </Link>
                         <SignedIn>
                             <Link to="/report">
-                                <Button icon={Plus}>Report Issue</Button>
+                                <Button icon={Plus} className="!px-3 md:!px-4">
+                                    <span className="hidden md:inline">Report Issue</span>
+                                </Button>
                             </Link>
                         </SignedIn>
                         <SignedOut>
                             <Link to="/sign-in">
-                                <Button icon={Plus}>Sign In to Report</Button>
+                                <Button icon={Plus} className="!px-3 md:!px-4">
+                                    <span className="hidden md:inline">Sign In</span>
+                                </Button>
                             </Link>
                         </SignedOut>
                     </div>
                 </div>
 
-                {/* Main Content with Sidebar Layout */}
-                <div className="flex flex-col lg:flex-row gap-6">
-                    {/* Left Sidebar - Filters */}
-                    <aside className="lg:w-72 flex-shrink-0">
+                {/* Main Content with Sidebar Layout - Takes remaining height */}
+                <div className="flex flex-col lg:flex-row gap-6 flex-1 min-h-0">
+                    {/* Left Sidebar - Filters (Desktop only, fixed width, scrolls internally) */}
+                    <aside className="hidden lg:block w-[280px] flex-shrink-0 order-1 overflow-y-auto scrollbar-hide">
                         <IssueFilters
                             params={params}
                             onFilterChange={updateParams}
@@ -72,8 +130,8 @@ const Home = () => {
                         />
                     </aside>
 
-                    {/* Right Content - Issue List */}
-                    <div className="flex-1">
+                    {/* Center Content - Issue List (scrollable feed) */}
+                    <div className="flex-1 min-w-0 order-1 lg:order-2 overflow-y-auto scrollbar-hide">
                         {loading ? (
                             <CardSkeletonList count={5} />
                         ) : error ? (
@@ -91,11 +149,11 @@ const Home = () => {
                                     No Issues Found
                                 </h3>
                                 <p className="text-dark-400 mb-6">
-                                    {params.category || params.status || params.search || params.state || params.district
+                                    {hasActiveFilters
                                         ? 'Try adjusting your filters to see more results.'
                                         : 'Be the first to report an issue in your community!'}
                                 </p>
-                                {params.category || params.status || params.search || params.state || params.district ? (
+                                {hasActiveFilters ? (
                                     <Button variant="secondary" onClick={resetParams}>
                                         Clear Filters
                                     </Button>
@@ -117,7 +175,7 @@ const Home = () => {
 
                                 {/* Pagination */}
                                 {pagination.pages > 1 && (
-                                    <div className="flex items-center justify-center gap-2 mt-10">
+                                    <div className="flex items-center justify-center gap-2 mt-10 pb-4">
                                         <Button
                                             variant="secondary"
                                             onClick={() => goToPage(pagination.page - 1)}
@@ -140,15 +198,16 @@ const Home = () => {
                             </>
                         )}
                     </div>
+
+                    {/* Right Sidebar - Action Ads (Desktop Only) */}
+                    <aside className="hidden xl:block w-[300px] flex-shrink-0 order-3 overflow-y-auto scrollbar-hide">
+                        <ActionAdSidebar />
+                    </aside>
                 </div>
             </main>
-
-            <Footer />
         </div>
     );
 };
 
-// Need to import MapPin for empty state
-import { MapPin } from 'lucide-react';
-
 export default Home;
+
