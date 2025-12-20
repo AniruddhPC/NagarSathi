@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import {
     MapPin,
@@ -23,6 +23,7 @@ import StatusTimeline from '../components/issues/StatusTimeline';
 import CommentSection from '../components/issues/CommentSection';
 import ReportIssueModal from '../components/issues/ReportIssueModal';
 import { useUpvote } from '../hooks/useUpvote';
+import { useIssueQuery } from '../hooks/useQueries';
 import { useUserContext } from '../context/UserContext';
 import { issueApi } from '../services/api';
 import {
@@ -42,9 +43,10 @@ const IssueDetail = () => {
     const navigate = useNavigate();
     const { user, isSignedIn, isAdmin } = useUserContext();
 
-    const [issue, setIssue] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    // Use TanStack Query for cached data fetching
+    const { data: issue, isLoading: loading, error: queryError } = useIssueQuery(id);
+    const error = queryError?.message || null;
+
     const [activeImage, setActiveImage] = useState(0);
     const [deleting, setDeleting] = useState(false);
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -54,23 +56,6 @@ const IssueDetail = () => {
         id,
         issue?.upvotesCount || 0
     );
-
-    // Fetch issue details
-    useEffect(() => {
-        const fetchIssue = async () => {
-            try {
-                setLoading(true);
-                const response = await issueApi.getIssueById(id);
-                setIssue(response.data.data);
-            } catch (err) {
-                setError(err.message || 'Failed to load issue');
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchIssue();
-    }, [id]);
 
     const handleDeleteClick = () => {
         setDeleteModalOpen(true);
@@ -132,13 +117,13 @@ const IssueDetail = () => {
 
             <main className="container-custom py-8">
                 {/* Back Button */}
-                <Link
-                    to="/"
+                <button
+                    onClick={() => navigate(-1)}
                     className="inline-flex items-center gap-2 text-dark-400 hover:text-white mb-6 transition-colors"
                 >
                     <ChevronLeft size={20} />
-                    <span>Back to Feed</span>
-                </Link>
+                    <span>Back</span>
+                </button>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Main Content */}
