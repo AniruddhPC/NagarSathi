@@ -267,7 +267,6 @@ const IssueForm = ({ onSubmit, initialData = null, loading = false }) => {
                 detectStateAndDistrict(fullAddress);
             }
 
-            toast.success('Location detected successfully!');
         } catch (error) {
             console.error('Geolocation error:', error);
             if (error.code === 1) {
@@ -533,7 +532,7 @@ const IssueForm = ({ onSubmit, initialData = null, loading = false }) => {
                     {...getRootProps()}
                     className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all duration-200 ${isDragActive
                         ? 'border-primary-500 bg-primary-500/10'
-                        : 'border-dark-600 hover:border-primary-500 hover:bg-dark-700/50'
+                        : 'border-dark-600 dark:border-dark-600 hover:border-primary-500 hover:bg-primary-500/5 dark:hover:bg-primary-500/10'
                         }`}
                 >
                     <input {...getInputProps()} />
