@@ -135,13 +135,8 @@ const Navbar = () => {
             {/* Logged in user controls */}
             <SignedIn>
               {/* Notification & User - Desktop (visible at lg and up) */}
-              <div className="hidden lg:flex items-center space-x-3">
+              <div className="hidden lg:flex items-center space-x-3 gap-2">
                 <NotificationDropdown />
-                {user && (
-                  <span className="text-dark-400 text-sm navbar-user-text">
-                    Hi, {user.name?.split(" ")[0]}
-                  </span>
-                )}
                 <UserButton
                   appearance={{
                     elements: {

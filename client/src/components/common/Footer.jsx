@@ -1,12 +1,13 @@
 import { Link } from 'react-router-dom';
 import { Github, Twitter, Mail } from 'lucide-react';
+import { useTheme } from '../../context/ThemeContext';
 
 /**
  * Footer Component
  */
 const Footer = () => {
     const currentYear = new Date().getFullYear();
-
+    const { isDark } = useTheme();
     return (
         <footer className="bg-dark-800 border-t border-dark-700">
             <div className="container-custom py-12">
@@ -15,13 +16,10 @@ const Footer = () => {
                     <div className="md:col-span-2">
                         <Link to="/" className="flex items-center space-x-3 mb-4">
                             <img 
-                                src="/logo.png" 
+                                src={isDark ? "/mini-logo.png" : "/mini-logo-light.png"} 
                                 alt="NagarSathi" 
                                 className="h-12 w-auto"
                             />
-                            <span className="text-xl font-bold text-white">
-                                Nagar<span className="text-primary-400">Sathi</span>
-                            </span>
                         </Link>
                         <p className="text-dark-400 max-w-md">
                             Empowering citizens to report and track civic issues in their

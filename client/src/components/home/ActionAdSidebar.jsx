@@ -10,12 +10,15 @@ import {
   Activity,
 } from "lucide-react";
 import Button from "../common/Button";
+import { useTheme } from "../../context/ThemeContext";
 
 /**
  * Report Issue Call-to-Action Ad
  * Encourages users to report new issues
  */
-export const ReportIssueAd = () => (
+export const ReportIssueAd = () => {
+    const { isDark } = useTheme();
+    return (
   <div className="bg-gradient-to-br from-primary-600 to-primary-700 rounded-xl p-5 text-white shadow-lg overflow-hidden relative animate-shimmer group spot-problem-card">
     <div className="absolute top-0 right-0 p-4 opacity-10">
       <Plus size={80} className="animate-float" />
@@ -35,19 +38,23 @@ export const ReportIssueAd = () => (
         or streetlights in seconds.
       </p>
       <Link to="/report">
-        <Button variant="blue" className="w-full ">
+      
+        <Button variant={isDark ? "blue" : "white"} className="w-full ">
           Report Issue Now
         </Button>
       </Link>
     </div>
   </div>
-);
+  )
+};
 
 /**
  * Trending Issues Ad
  * Shows what's happening nearby
  */
-export const TrendingAd = () => (
+export const TrendingAd = () => {
+    const { isDark } = useTheme();
+    return (
   <div className="bg-dark-800 border border-dark-700 rounded-xl p-5 shadow-sm hover:border-dark-500 transition-colors group">
     <div className="flex items-center gap-2 mb-3 text-amber-500">
       <div className="relative">
@@ -90,6 +97,7 @@ export const TrendingAd = () => (
     </Link>
   </div>
 );
+}
 
 /**
  * Trust & Impact Ad

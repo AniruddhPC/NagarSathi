@@ -252,7 +252,7 @@ const IssueCard = ({ issue }) => {
       {/* Actions Bar - Always Present */}
       <div className=" py-2.5 sm:py-3 border-t border-dark-700/50 bg-dark-800/50">
         <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-0.5 sm:gap-1">
+          <div className="flex items-center gap-0.5 sm:gap-1 px-2">
             {/* Upvote */}
             <button
               onClick={() => isSignedIn && toggleUpvote()}
