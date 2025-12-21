@@ -14,4 +14,6 @@ if (key) {
     console.log('Please check your .env file in the server directory.');
 }
 
+
+
 console.log('--------------------------------');
