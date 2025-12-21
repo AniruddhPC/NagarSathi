@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { SignedIn, SignedOut } from "@clerk/clerk-react";
+import { SignedIn, SignedOut, useClerk } from "@clerk/clerk-react";
 import CustomUserMenu from "./CustomUserMenu";
 import { useUserContext } from "../../context/UserContext";
 import { useTheme } from "../../context/ThemeContext";
@@ -14,6 +14,7 @@ import {
   X,
   Sun,
   Moon,
+  LogOut,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -25,6 +26,7 @@ const Navbar = () => {
   const location = useLocation();
   const { isAdmin, user } = useUserContext();
   const { toggleTheme, isDark } = useTheme();
+  const { signOut } = useClerk();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const isActive = (path) => location.pathname === path;
@@ -137,9 +139,10 @@ const Navbar = () => {
                 <CustomUserMenu />
               </div>
 
-              {/* Notification Bell - Mobile/Tablet (below lg) */}
-              <div className="lg:hidden">
+              {/* Notification Bell & Profile Icon - Mobile/Tablet (below lg) */}
+              <div className="lg:hidden flex items-center space-x-2">
                 <NotificationDropdown />
+                <CustomUserMenu />
               </div>
             </SignedIn>
 
@@ -238,22 +241,20 @@ const Navbar = () => {
               <span>{isDark ? "Light Mode" : "Dark Mode"}</span>
             </button>
 
-            {/* User Info - Mobile */}
+            {/* Logout Button - Mobile */}
             <SignedIn>
-              <Link
-                to="/profile"
-                onClick={closeMobileMenu}
-                className="flex items-center space-x-3 px-4 py-3 border-t border-dark-700 mt-4 pt-4 mobile-menu-user hover:bg-dark-700 transition-colors"
-              >
-                <img
-                  src={user?.imageUrl}
-                  alt={user?.fullName}
-                  className="w-8 h-8 rounded-full border border-dark-600"
-                />
-                <span className="text-dark-300 font-medium">
-                  {user?.fullName || user?.username}
-                </span>
-              </Link>
+              <div className="border-t border-dark-700 mt-4 pt-4">
+                <button
+                  onClick={() => {
+                    closeMobileMenu();
+                    signOut();
+                  }}
+                  className="flex items-center space-x-3 px-4 py-3 rounded-lg text-red-400 hover:text-red-300 hover:bg-red-400/10 transition-colors w-full text-left"
+                >
+                  <LogOut size={20} />
+                  <span>Sign Out</span>
+                </button>
+              </div>
             </SignedIn>
 
             {/* Sign In Link - Mobile (for signed out users) */}

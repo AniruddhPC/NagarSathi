@@ -1135,8 +1135,7 @@ html.light body {
 /* Mobile optimizations */
 @media (max-width: 640px) {
   .cl-card {
-    padding: 1.25rem !important;
-    margin: 0.5rem !important;
+    padding: 0.5rem !important;
   }
 
   .cl-headerTitle {

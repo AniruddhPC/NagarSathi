@@ -35,10 +35,10 @@ const SignUpPage = () => {
             </header>
 
             {/* Main content - centered */}
-            <main className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8">
+            <main className="flex-1 flex items-center justify-center px-4 py-6 sm:p-6 lg:p-8">
                 <div className="w-full max-w-md">
                     {/* Card with heading inside */}
-                    <div className={`rounded-xl p-6 sm:p-8 ${isDark ? 'bg-dark-800 border border-dark-700' : 'bg-white shadow-lg'}`}>
+                    <div className={`rounded-xl p-5 sm:p-6 md:p-8 ${isDark ? 'bg-dark-800 border border-dark-700' : 'bg-white shadow-lg'}`}>
                         {/* Welcome text inside card */}
                         <div className="text-center mb-6">
                             <h1 className={`text-2xl sm:text-3xl font-bold mb-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
@@ -58,9 +58,13 @@ const SignUpPage = () => {
                             appearance={{
                                 elements: {
                                     rootBox: 'w-full',
-                                    card: 'bg-transparent border-0 shadow-none !p-0',
-                                    cardBox: 'shadow-none border-0',
-                                    main: 'shadow-none',
+                                    card: 'bg-transparent border-0 shadow-none !p-0 w-full',
+                                    cardBox: 'shadow-none border-0 w-full',
+                                    main: 'shadow-none w-full',
+                                    form: 'w-full',
+                                    formContainer: 'w-full',
+                                    formFieldRow: 'w-full',
+                                    formField: 'w-full',
                                     headerTitle: 'hidden',
                                     headerSubtitle: 'hidden',
                                     socialButtonsBlockButton: isDark
@@ -73,7 +77,7 @@ const SignUpPage = () => {
                                     formFieldInput: isDark
                                         ? 'bg-dark-700 border-dark-600 text-white placeholder:text-dark-500'
                                         : 'bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400',
-                                    formButtonPrimary: 'bg-primary-600 hover:bg-primary-700 text-white',
+                                    formButtonPrimary: 'bg-primary-600 hover:bg-primary-700 text-white w-full',
                                     footer: 'hidden',
                                     identityPreviewText: isDark ? 'text-white' : 'text-gray-900',
                                     identityPreviewEditButton: 'text-primary-500',
