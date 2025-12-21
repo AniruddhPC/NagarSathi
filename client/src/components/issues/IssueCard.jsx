@@ -204,11 +204,10 @@ const IssueCard = ({ issue }) => {
                       e.stopPropagation();
                       setCurrentImageIndex(idx);
                     }}
-                    className={`rounded-full transition-all duration-200 ${
-                      idx === currentImageIndex
+                    className={`rounded-full transition-all duration-200 ${idx === currentImageIndex
                         ? "bg-primary-400 w-2 h-2 sm:w-2.5 sm:h-2.5"
                         : "bg-white/40 hover:bg-white/60 w-1.5 h-1.5 sm:w-2 sm:h-2 image-dot"
-                    }`}
+                      }`}
                     aria-label={`Go to image ${idx + 1}`}
                   />
                 ))}
@@ -258,18 +257,16 @@ const IssueCard = ({ issue }) => {
             <button
               onClick={() => isSignedIn && toggleUpvote()}
               disabled={loading || !isSignedIn}
-              className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg transition-all duration-200 ${
-                upvoted
+              className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg transition-all duration-200 ${upvoted
                   ? "text-primary-400 bg-primary-500/10"
                   : "text-dark-300 hover:text-primary-400 hover:bg-primary-500/5"
-              } ${!isSignedIn && "opacity-50 cursor-not-allowed"}`}
+                } ${!isSignedIn && "opacity-50 cursor-not-allowed"}`}
               aria-label={upvoted ? "Remove upvote" : "Upvote"}
             >
               <ArrowUp
                 size={18}
-                className={`sm:w-5 sm:h-5 transition-transform ${
-                  upvoted ? "fill-primary-400" : ""
-                } ${!loading && "hover:scale-110"}`}
+                className={`sm:w-5 sm:h-5 transition-transform ${upvoted ? "fill-primary-400" : ""
+                  } ${!loading && "hover:scale-110"}`}
               />
               <span className="text-xs sm:text-sm font-medium hidden sm:inline">
                 {count}
@@ -395,11 +392,10 @@ const IssueCard = ({ issue }) => {
                   className="flex flex-col items-center gap-2.5 p-4 rounded-xl bg-dark-700/30 border border-dark-600/50 hover:bg-dark-700 hover:border-primary-500/50 hover:shadow-lg hover:shadow-primary-500/10 transition-all duration-200 group active:scale-95 share-option-button"
                 >
                   <div
-                    className={`w-12 h-12 rounded-full bg-dark-800/50 flex items-center justify-center group-hover:scale-110 transition-all share-icon-container ${
-                      copied
+                    className={`w-12 h-12 rounded-full bg-dark-800/50 flex items-center justify-center group-hover:scale-110 transition-all share-icon-container ${copied
                         ? "bg-green-500/10"
                         : "group-hover:bg-primary-500/10"
-                    }`}
+                      }`}
                   >
                     {copied ? (
                       <Check size={24} className="text-green-400" />
@@ -411,11 +407,10 @@ const IssueCard = ({ issue }) => {
                     )}
                   </div>
                   <span
-                    className={`text-xs font-medium transition-colors ${
-                      copied
+                    className={`text-xs font-medium transition-colors ${copied
                         ? "text-green-400"
                         : "text-dark-300 group-hover:text-primary-400"
-                    }`}
+                      }`}
                   >
                     {copied ? "Copied!" : "Copy Link"}
                   </span>

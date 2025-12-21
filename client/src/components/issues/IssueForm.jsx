@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Upload, X, MapPin, Loader, Crosshair } from 'lucide-react';
+import { Upload, X, MapPin, Loader } from 'lucide-react';
 import Button from '../common/Button';
 import toast from 'react-hot-toast';
 import statesAndDistricts from '../../utils/states-and-districts.json';
@@ -179,6 +179,14 @@ const IssueForm = ({ onSubmit, initialData = null, loading = false }) => {
         };
     }, []);
 
+    // Auto-detect location on component mount
+    useEffect(() => {
+        // Only auto-detect if there's no initial data (new issue, not editing)
+        if (!initialData) {
+            getCurrentLocation();
+        }
+    }, []);
+
     // Get current location using browser geolocation and reverse geocode
     const getCurrentLocation = useCallback(async () => {
         if (!navigator.geolocation) {
@@ -336,7 +344,7 @@ const IssueForm = ({ onSubmit, initialData = null, loading = false }) => {
             return;
         }
         if (!formData.address.trim()) {
-            toast.error('Please enter a location address');
+            toast.error('Location could not be detected. Please enable location permissions and refresh.');
             return;
         }
 
@@ -416,49 +424,84 @@ const IssueForm = ({ onSubmit, initialData = null, loading = false }) => {
                 </select>
             </div>
 
-            {/* State and District */}
+            {/* State and District - Auto-detected (Read-only) */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label className="block text-dark-200 text-sm font-medium mb-2">
                         State
+                        <span className="text-primary-400 text-xs ml-2">(Auto-detected)</span>
                     </label>
-                    <select
-                        name="state"
-                        value={formData.state}
-                        onChange={(e) => {
-                            setFormData(prev => ({ ...prev, state: e.target.value, district: '' }));
-                        }}
-                        className="select-field"
-                    >
-                        <option value="">Select state</option>
-                        {states.map((st) => (
-                            <option key={st.value} value={st.value}>
-                                {st.label}
-                            </option>
-                        ))}
-                    </select>
+                    <div className="input-field bg-dark-700/50 cursor-not-allowed flex items-center">
+                        {isGettingLocation ? (
+                            <span className="text-dark-400 flex items-center gap-2">
+                                <Loader size={14} className="animate-spin" />
+                                Detecting...
+                            </span>
+                        ) : formData.state ? (
+                            <span className="text-white">
+                                {statesData.find(s => s.value === formData.state)?.label || formData.state}
+                            </span>
+                        ) : (
+                            <span className="text-dark-400">Not detected</span>
+                        )}
+                    </div>
                 </div>
                 <div>
                     <label className="block text-dark-200 text-sm font-medium mb-2">
                         District
+                        <span className="text-primary-400 text-xs ml-2">(Auto-detected)</span>
                     </label>
-                    <select
-                        name="district"
-                        value={formData.district}
-                        onChange={handleChange}
-                        className="select-field"
-                        disabled={!formData.state || !districtsData[formData.state]}
-                    >
-                        <option value="">Select district</option>
-                        {formData.state && districtsData[formData.state] &&
-                            districtsData[formData.state].map((district) => (
-                                <option key={district.value} value={district.value}>
-                                    {district.label}
-                                </option>
-                            ))
-                        }
-                    </select>
+                    <div className="input-field bg-dark-700/50 cursor-not-allowed flex items-center">
+                        {isGettingLocation ? (
+                            <span className="text-dark-400 flex items-center gap-2">
+                                <Loader size={14} className="animate-spin" />
+                                Detecting...
+                            </span>
+                        ) : formData.district ? (
+                            <span className="text-white">
+                                {formData.state && districtsData[formData.state]?.find(d => d.value === formData.district)?.label || formData.district}
+                            </span>
+                        ) : (
+                            <span className="text-dark-400">Not detected</span>
+                        )}
+                    </div>
                 </div>
+            </div>
+
+            {/* Location - Auto-detected (Read-only) */}
+            <div>
+                <div className="flex items-center justify-between mb-2">
+                    <label className="block text-dark-200 text-sm font-medium">
+                        Location Address
+                        <span className="text-primary-400 text-xs ml-2">(Auto-detected)</span>
+                    </label>
+                    {isGettingLocation && (
+                        <span className="flex items-center gap-1.5 text-xs text-primary-400">
+                            <Loader size={14} className="animate-spin" />
+                            Detecting location...
+                        </span>
+                    )}
+                </div>
+                <div className="relative">
+                    <MapPin
+                        size={18}
+                        className="absolute left-3 top-1/2 -translate-y-1/2 text-dark-400"
+                    />
+                    <div className="input-field pl-10 bg-dark-700/50 cursor-not-allowed min-h-[44px] flex items-center">
+                        {isGettingLocation ? (
+                            <span className="text-dark-400">Detecting your location...</span>
+                        ) : formData.address ? (
+                            <span className="text-white">{formData.address}</span>
+                        ) : (
+                            <span className="text-dark-400">Location not detected. Please enable location permissions.</span>
+                        )}
+                    </div>
+                </div>
+                {!isGettingLocation && !formData.address && (
+                    <p className="text-amber-400 text-xs mt-2">
+                        ⚠️ Could not detect location. Please enable location permissions in your browser and refresh the page.
+                    </p>
+                )}
             </div>
 
             {/* Description */}
@@ -479,127 +522,84 @@ const IssueForm = ({ onSubmit, initialData = null, loading = false }) => {
                 </p>
             </div>
 
-            {/* Location - Text Based */}
-            <div>
-                <div className="flex items-center justify-between mb-2">
-                    <label className="block text-dark-200 text-sm font-medium">
-                        Location Address *
-                    </label>
-                    <button
-                        type="button"
-                        onClick={getCurrentLocation}
-                        disabled={isGettingLocation}
-                        className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-primary-400 bg-primary-500/10 hover:bg-primary-500/20 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                        {isGettingLocation ? (
-                            <>
-                                <Loader size={14} className="animate-spin" />
-                                <span>Getting location...</span>
-                            </>
-                        ) : (
-                            <>
-                                <Crosshair size={14} />
-                                <span>Get My Location</span>
-                            </>
-                        )}
-                    </button>
-                </div>
-                <div className="relative">
-                    <MapPin
-                        size={18}
-                        className="absolute left-3 top-1/2 -translate-y-1/2 text-dark-400"
-                    />
-                    <input
-                        type="text"
-                        name="address"
-                        value={formData.address}
-                        onChange={handleAddressChange}
-                        placeholder="Enter address or click 'Get My Location'"
-                        className="input-field pl-10 pr-10"
-                    />
-                    {isDetectingLocation && (
-                        <Loader
-                            size={16}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-primary-400 animate-spin"
-                        />
-                    )}
-                </div>
-                <p className="text-dark-500 text-xs mt-1">
-                    E.g., "Near Gandhi Statue, MG Road, Bangalore" or "Sector 15, Noida"
-                    {(formData.state || formData.district) && (
-                        <span className="text-primary-400 ml-2">
-                            ✓ Auto-detected: {formData.state && statesData.find(s => s.value === formData.state)?.label}
-                            {formData.district && districtsData[formData.state]?.find(d => d.value === formData.district)?.label && (
-                                <>, {districtsData[formData.state].find(d => d.value === formData.district)?.label}</>
-                            )}
-                        </span>
-                    )}
-                </p>
-            </div>
-
             {/* Image Upload */}
             <div>
                 <label className="block text-dark-200 text-sm font-medium mb-2">
                     Photos (Max 5)
                 </label>
 
-                {/* Dropzone */}
+                {/* Dropzone Container */}
                 <div
                     {...getRootProps()}
-                    className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all duration-200 ${isDragActive
+                    className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all duration-200 ${isDragActive
                         ? 'border-primary-500 bg-primary-500/10'
                         : 'border-dark-600 hover:border-primary-500 hover:bg-dark-700/50'
                         }`}
                 >
                     <input {...getInputProps()} />
-                    <Upload
-                        size={40}
-                        className={`mx-auto mb-3 ${isDragActive ? 'text-primary-400' : 'text-dark-400'
-                            }`}
-                    />
-                    <p className="text-dark-300">
-                        {isDragActive
-                            ? 'Drop the images here...'
-                            : 'Drag & drop images here, or click to select'}
-                    </p>
-                    <p className="text-dark-500 text-sm mt-1">
-                        JPG, PNG, WebP up to 5MB each
-                    </p>
+
+                    {/* Image Previews - Inside Container */}
+                    {(images.length > 0 || existingImages.length > 0) ? (
+                        <div className="space-y-4">
+                            <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">
+                                {/* Existing Images */}
+                                {existingImages.map((url, index) => (
+                                    <div key={`existing-${index}`} className="relative group">
+                                        <img
+                                            src={url}
+                                            alt={`Existing ${index + 1}`}
+                                            className="w-full h-20 object-cover rounded-lg"
+                                        />
+                                    </div>
+                                ))}
+
+                                {/* New Images */}
+                                {images.map((file, index) => (
+                                    <div key={file.name} className="relative group">
+                                        <img
+                                            src={file.preview}
+                                            alt={`Preview ${index + 1}`}
+                                            className="w-full h-20 object-cover rounded-lg"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                removeImage(index);
+                                            }}
+                                            className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                                        >
+                                            <X size={14} />
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Add more prompt */}
+                            {(images.length + existingImages.length) < 5 && (
+                                <p className="text-dark-400 text-sm">
+                                    Click or drag to add more images ({5 - images.length - existingImages.length} remaining)
+                                </p>
+                            )}
+                        </div>
+                    ) : (
+                        <>
+                            <Upload
+                                size={40}
+                                className={`mx-auto mb-3 ${isDragActive ? 'text-primary-400' : 'text-dark-400'
+                                    }`}
+                            />
+                            <p className="text-dark-300">
+                                {isDragActive
+                                    ? 'Drop the images here...'
+                                    : 'Drag & drop images here, or click to select'}
+                            </p>
+                            <p className="text-dark-500 text-sm mt-1">
+                                JPG, PNG, WebP up to 5MB each
+                            </p>
+                        </>
+                    )}
                 </div>
-
-                {/* Image Previews */}
-                {(images.length > 0 || existingImages.length > 0) && (
-                    <div className="grid grid-cols-3 sm:grid-cols-5 gap-3 mt-4">
-                        {/* Existing Images */}
-                        {existingImages.map((url, index) => (
-                            <div key={`existing-${index}`} className="relative group">
-                                <img
-                                    src={url}
-                                    alt={`Existing ${index + 1}`}
-                                    className="w-full h-20 object-cover rounded-lg"
-                                />
-                            </div>
-                        ))}
-
-                        {/* New Images */}
-                        {images.map((file, index) => (
-                            <div key={file.name} className="relative group">
-                                <img
-                                    src={file.preview}
-                                    alt={`Preview ${index + 1}`}
-                                    className="w-full h-20 object-cover rounded-lg"
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => removeImage(index)}
-                                    className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity"
-                                >
-                                    <X size={14} />
-                                </button>
-                            </div>
-                        ))}
-                    </div>
-                )}
             </div>
 
             {/* Submit Button */}

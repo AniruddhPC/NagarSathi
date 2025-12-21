@@ -59,9 +59,8 @@ const Home = () => {
 
       {/* Mobile Filter Drawer */}
       <div
-        className={`fixed top-0 left-0 h-full w-[300px] bg-dark-900 z-50 transform transition-transform duration-300 ease-in-out lg:hidden ${
-          mobileFiltersOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`fixed top-0 left-0 h-full w-[300px] bg-dark-900 z-50 transform transition-transform duration-300 ease-in-out lg:hidden ${mobileFiltersOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
       >
         <div className="flex items-center justify-between p-4 border-b border-dark-700">
           <h2 className="text-lg font-semibold text-white">Filters</h2>
@@ -101,11 +100,10 @@ const Home = () => {
             {/* Mobile Filter Button */}
             <button
               onClick={() => setMobileFiltersOpen(true)}
-              className={`lg:hidden flex items-center gap-2 px-3 md:px-4 py-2.5 rounded-xl border transition-all duration-200 ${
-                hasActiveFilters
+              className={`lg:hidden flex items-center gap-2 px-3 md:px-4 py-2.5 rounded-xl border transition-all duration-200 ${hasActiveFilters
                   ? "bg-primary-600/20 border-primary-500/50 text-primary-400"
                   : "bg-dark-800 border-dark-700 text-dark-300 hover:text-white hover:border-dark-600"
-              }`}
+                }`}
             >
               <SlidersHorizontal size={18} />
               <span className="hidden md:inline">Filters</span>
