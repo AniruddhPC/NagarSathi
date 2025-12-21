@@ -426,9 +426,11 @@ const IssueCard = ({ issue }) => {
             {/* Link Preview - Enhanced */}
             <div className="px-6 pb-6">
               <div className="flex items-center gap-3 p-4 bg-dark-700/30 border border-dark-600/50 rounded-xl hover:border-primary-500/50 transition-all">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center text-white text-base font-bold flex-shrink-0 shadow-lg ring-2 ring-primary-500/20">
-                  N
-                </div>
+                <img
+                  src="/mini-logo.png"
+                  alt="NagarSathi"
+                  className="w-12 h-12 rounded-xl flex-shrink-0 shadow-lg ring-2 ring-primary-500/20 object-contain"
+                />
                 <div className="flex-1 min-w-0">
                   <p className="text-sm text-white font-semibold truncate mb-1.5">
                     {issue.title}

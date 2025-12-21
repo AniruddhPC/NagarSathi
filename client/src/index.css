@@ -641,32 +641,672 @@ html.light body {
    CLERK OVERRIDES
    ============================================ */
 
-.cl-internal-b3fm6y {
-  background-color: #1e293b !important;
+/* Root container */
+.cl-rootBox {
+  width: 100% !important;
+  max-width: 28rem !important;
+  margin: 0 auto !important;
 }
 
+.cl-internal-hpxssd {
+  width: 100% !important;
+  max-width: 28rem !important;
+  margin: 0 auto !important;
+}
+
+/* Card styling */
 .cl-card {
   background-color: #1e293b !important;
   border: 1px solid #334155 !important;
+  border-radius: 0.75rem !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2) !important;
+  padding: 1.5rem !important;
+  width: 100% !important;
 }
 
-.cl-headerTitle,
-.cl-headerSubtitle {
+@media (min-width: 640px) {
+  .cl-card {
+    padding: 2rem !important;
+  }
+}
+
+/* Header */
+.cl-headerTitle {
   color: #f1f5f9 !important;
+  font-size: 1.5rem !important;
+  font-weight: 700 !important;
+  margin-bottom: 0.5rem !important;
 }
 
-.cl-formFieldLabel {
+@media (min-width: 640px) {
+  .cl-headerTitle {
+    font-size: 1.875rem !important;
+  }
+}
+
+.cl-headerSubtitle {
   color: #94a3b8 !important;
+  font-size: 0.875rem !important;
+  margin-bottom: 1.5rem !important;
+}
+
+@media (min-width: 640px) {
+  .cl-headerSubtitle {
+    font-size: 1rem !important;
+  }
+}
+
+/* Form fields */
+.cl-formFieldLabel {
+  color: #cbd5e1 !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  margin-bottom: 0.5rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 0.5rem !important;
+  width: 100% !important;
+}
+
+/* Ensure label text container doesn't overflow */
+.cl-formFieldLabel>label,
+.cl-formFieldLabel>*:not(span):not([class*="optional"]) {
+  flex: 1 !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+/* Optional text styling - prevent overlap */
+.cl-formFieldLabel span,
+.cl-formFieldLabel .cl-optionalIndicator,
+.cl-formFieldLabelRow span,
+.cl-formFieldLabelRow .cl-optionalIndicator,
+.cl-formFieldLabelRow [class*="optional"],
+.cl-formFieldLabelRow [class*="Optional"] {
+  color: #64748b !important;
+  font-size: 0.75rem !important;
+  font-weight: 400 !important;
+  white-space: nowrap !important;
+  margin-left: auto !important;
+  flex-shrink: 0 !important;
+  padding-left: 0.5rem !important;
+}
+
+/* Form field label container - ensure proper layout */
+.cl-formFieldLabelRow {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 0.5rem !important;
+  margin-bottom: 0.5rem !important;
+  width: 100% !important;
+}
+
+/* Ensure label text doesn't overlap with optional - wrap label text */
+.cl-formFieldLabel>*:first-child:not(span):not([class*="optional"]) {
+  flex: 1 !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* Handle any nested structure for optional text */
+.cl-formFieldLabel>span:last-child,
+.cl-formFieldLabel>[class*="optional"]:last-child,
+.cl-formFieldLabelRow>span:last-child,
+.cl-formFieldLabelRow>[class*="optional"]:last-child {
+  flex-shrink: 0 !important;
+  margin-left: 0.5rem !important;
+}
+
+/* General form field wrapper to prevent overlap */
+.cl-formField {
+  width: 100% !important;
+}
+
+.cl-formFieldRow {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.5rem !important;
+  width: 100% !important;
+}
+
+/* Ensure proper spacing in form field containers */
+.cl-formFieldInputWrapper,
+.cl-formFieldInputContainer {
+  width: 100% !important;
 }
 
 .cl-formFieldInput {
+  background-color: #1e293b !important;
+  border: 1px solid #475569 !important;
+  border-radius: 0.5rem !important;
+  color: #f1f5f9 !important;
+  padding: 0.75rem 1rem !important;
+  font-size: 1rem !important;
+  width: 100% !important;
+  transition: all 0.2s ease !important;
+}
+
+.cl-formFieldInput::placeholder {
+  color: #94a3b8 !important;
+}
+
+.cl-formFieldInput:focus {
+  outline: none !important;
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+}
+
+/* Social buttons */
+.cl-socialButtonsBlockButton {
+  background-color: #334155 !important;
+  border: 1px solid #475569 !important;
+  border-radius: 0.5rem !important;
+  color: #f1f5f9 !important;
+  padding: 0.75rem 1rem !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease !important;
+  width: 100% !important;
+  margin-bottom: 0.75rem !important;
+}
+
+.cl-socialButtonsBlockButton:hover {
+  background-color: #475569 !important;
+  border-color: #64748b !important;
+}
+
+.cl-socialButtonsBlockButtonText {
+  color: #f1f5f9 !important;
+  font-weight: 500 !important;
+}
+
+/* Google icon size fix */
+.cl-socialButtonsBlockButton svg,
+.cl-socialButtonsBlockButton img,
+.cl-socialButtonsBlockButton [class*="icon"],
+.cl-socialButtonsBlockButton [class*="Icon"] {
+  width: 20px !important;
+  height: 20px !important;
+  min-width: 20px !important;
+  min-height: 20px !important;
+  margin-right: 0.75rem !important;
+  flex-shrink: 0 !important;
+}
+
+/* Ensure icon container has proper spacing */
+.cl-socialButtonsBlockButton>*:first-child {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+}
+
+@media (min-width: 640px) {
+
+  .cl-socialButtonsBlockButton svg,
+  .cl-socialButtonsBlockButton img,
+  .cl-socialButtonsBlockButton [class*="icon"],
+  .cl-socialButtonsBlockButton [class*="Icon"] {
+    width: 22px !important;
+    height: 22px !important;
+    min-width: 22px !important;
+    min-height: 22px !important;
+  }
+}
+
+/* Primary button */
+.cl-formButtonPrimary {
+  background-color: #3b82f6 !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 0.5rem !important;
+  padding: 0.75rem 1.5rem !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  width: 100% !important;
+  transition: all 0.2s ease !important;
+  box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3) !important;
+  margin-top: 1rem !important;
+}
+
+.cl-formButtonPrimary:hover {
+  background-color: #2563eb !important;
+  box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.4) !important;
+  transform: translateY(-1px) !important;
+}
+
+.cl-formButtonPrimary:active {
+  transform: translateY(0) !important;
+}
+
+.cl-formButtonPrimary:disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+}
+
+/* Ensure button text is always white */
+.cl-formButtonPrimary,
+.cl-formButtonPrimary *,
+.cl-formButtonPrimary span,
+.cl-formButtonPrimary svg {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+}
+
+/* Footer styling */
+.cl-footer,
+[class*="cl-footer"],
+[class*="cl-cardFooter"] {
   background-color: #0f172a !important;
-  border-color: #334155 !important;
+  border-top: 1px solid #334155 !important;
+  padding: 1.5rem !important;
+  margin-top: 1.5rem !important;
+  border-radius: 0 0 0.75rem 0.75rem !important;
+}
+
+.cl-cardFooter {
+  background-color: #0f172a !important;
+  border-top: 1px solid #334155 !important;
+  padding: 1.5rem !important;
+  margin-top: 1.5rem !important;
+  border-radius: 0 0 0.75rem 0.75rem !important;
+}
+
+/* Clerk internal footer classes */
+.cl-internal-*[class*="footer"],
+[class*="cl-internal"][class*="footer"],
+[class*="cl-internal"][class*="Footer"] {
+  background-color: #0f172a !important;
+  border-top: 1px solid #334155 !important;
+}
+
+/* Links */
+.cl-footerActionLink {
+  color: #60a5fa !important;
+  font-weight: 500 !important;
+  transition: color 0.2s ease !important;
+  text-decoration: none !important;
+}
+
+.cl-footerActionLink:hover {
+  color: #93c5fd !important;
+  text-decoration: underline !important;
+}
+
+.cl-footerActionText {
+  color: #94a3b8 !important;
+  font-size: 0.875rem !important;
+}
+
+/* Clerk branding */
+.cl-footerPages {
+  color: #64748b !important;
+  font-size: 0.75rem !important;
+}
+
+.cl-footerPages svg,
+.cl-footerPages img {
+  opacity: 0.7 !important;
+}
+
+/* Development mode indicator */
+.cl-footerPages [class*="development"],
+.cl-footerPages [class*="Development"] {
+  color: #f59e0b !important;
+  font-size: 0.75rem !important;
+  font-weight: 500 !important;
+}
+
+/* Footer text elements */
+.cl-footerAction {
+  color: #94a3b8 !important;
+  font-size: 0.875rem !important;
+}
+
+/* Additional footer elements */
+.cl-footerPagesText,
+.cl-footerPagesTextContainer {
+  color: #64748b !important;
+  font-size: 0.75rem !important;
+}
+
+/* Clerk logo/branding in footer */
+.cl-footerPages svg path,
+.cl-footerPages svg circle,
+.cl-footerPages svg rect {
+  fill: #64748b !important;
+}
+
+/* Development mode text */
+[class*="cl-footer"] [class*="development"],
+[class*="cl-footer"] [class*="Development"],
+[class*="cl-cardFooter"] [class*="development"],
+[class*="cl-cardFooter"] [class*="Development"] {
+  color: #f59e0b !important;
+  font-size: 0.75rem !important;
+  font-weight: 500 !important;
+}
+
+/* Footer container spacing */
+.cl-footer>*,
+.cl-cardFooter>* {
+  margin-bottom: 0.5rem !important;
+}
+
+.cl-footer>*:last-child,
+.cl-cardFooter>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* Footer inner containers */
+.cl-footerInner,
+.cl-cardFooterInner {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.75rem !important;
+}
+
+/* Footer action container */
+.cl-footerActionContainer {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+  flex-wrap: wrap !important;
+}
+
+/* Ensure footer text is readable */
+.cl-footer p,
+.cl-cardFooter p,
+.cl-footer span,
+.cl-cardFooter span {
+  line-height: 1.5 !important;
+}
+
+/* Divider */
+.cl-dividerLine {
+  background-color: #334155 !important;
+  height: 1px !important;
+}
+
+.cl-dividerText {
+  color: #94a3b8 !important;
+  font-size: 0.875rem !important;
+}
+
+/* Error messages */
+.cl-formFieldErrorText {
+  color: #f87171 !important;
+  font-size: 0.875rem !important;
+  margin-top: 0.25rem !important;
+}
+
+/* Success messages */
+.cl-formFieldSuccessText {
+  color: #34d399 !important;
+  font-size: 0.875rem !important;
+  margin-top: 0.25rem !important;
+}
+
+/* OTP code fields */
+.cl-otpCodeFieldInput {
+  background-color: #1e293b !important;
+  border: 1px solid #475569 !important;
+  border-radius: 0.5rem !important;
   color: #f1f5f9 !important;
 }
 
-.cl-footerActionLink {
+.cl-otpCodeFieldInput:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+}
+
+/* Identity preview */
+.cl-identityPreviewText {
+  color: #f1f5f9 !important;
+}
+
+.cl-identityPreviewEditButton {
+  color: #60a5fa !important;
+}
+
+.cl-identityPreviewEditButton:hover {
+  color: #93c5fd !important;
+}
+
+/* Resend code link */
+.cl-formResendCodeLink {
+  color: #60a5fa !important;
+}
+
+.cl-formResendCodeLink:hover {
+  color: #93c5fd !important;
+}
+
+/* Alert text */
+.cl-alertText {
+  color: #cbd5e1 !important;
+}
+
+/* Mobile optimizations */
+@media (max-width: 640px) {
+  .cl-card {
+    padding: 1.25rem !important;
+    margin: 0.5rem !important;
+  }
+
+  .cl-headerTitle {
+    font-size: 1.5rem !important;
+  }
+
+  .cl-formFieldInput,
+  .cl-formButtonPrimary,
+  .cl-socialButtonsBlockButton {
+    padding: 0.875rem 1rem !important;
+    font-size: 1rem !important;
+  }
+
+  .cl-formFieldLabel {
+    font-size: 0.875rem !important;
+  }
+}
+
+/* Light mode overrides for Clerk */
+.light .cl-card {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+
+.light .cl-headerTitle {
+  color: #0f172a !important;
+}
+
+.light .cl-headerSubtitle {
+  color: #64748b !important;
+}
+
+.light .cl-formFieldLabel {
+  color: #475569 !important;
+}
+
+.light .cl-formFieldInput {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+.light .cl-formFieldInput::placeholder {
+  color: #94a3b8 !important;
+}
+
+.light .cl-formFieldInput:focus {
+  border-color: #3b82f6 !important;
+}
+
+.light .cl-socialButtonsBlockButton {
+  background-color: #f1f5f9 !important;
+  border-color: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+.light .cl-socialButtonsBlockButton:hover {
+  background-color: #e2e8f0 !important;
+  border-color: #cbd5e1 !important;
+}
+
+.light .cl-socialButtonsBlockButtonText {
+  color: #0f172a !important;
+}
+
+/* Light mode button text - ensure white */
+.light .cl-formButtonPrimary,
+.light .cl-formButtonPrimary *,
+.light .cl-formButtonPrimary span,
+.light .cl-formButtonPrimary svg,
+.light .cl-formButtonPrimary button {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+}
+
+.light .cl-formButtonPrimary:hover,
+.light .cl-formButtonPrimary:hover *,
+.light .cl-formButtonPrimary:hover span {
+  color: #ffffff !important;
+}
+
+/* Light mode footer overrides */
+.light .cl-footer,
+.light [class*="cl-footer"],
+.light .cl-cardFooter,
+.light [class*="cl-cardFooter"],
+.light [class*="cl-internal"][class*="footer"],
+.light [class*="cl-internal"][class*="Footer"] {
+  background-color: #f8fafc !important;
+  background: #f8fafc !important;
+  border-top-color: #e2e8f0 !important;
+  border-top: 1px solid #e2e8f0 !important;
+}
+
+/* Override any inline styles or default Clerk footer backgrounds */
+.light .cl-card>[class*="footer"],
+.light .cl-card>[class*="Footer"],
+.light .cl-rootBox [class*="footer"],
+.light .cl-rootBox [class*="Footer"],
+.light [class*="cl-card"] [class*="footer"],
+.light [class*="cl-card"] [class*="Footer"] {
+  background-color: #f8fafc !important;
+  background: #f8fafc !important;
+}
+
+/* Target any element with footer in class name within card */
+.light .cl-card [class*="footer"],
+.light .cl-card [class*="Footer"] {
+  background-color: #f8fafc !important;
+  background: #f8fafc !important;
+  border-top-color: #e2e8f0 !important;
+}
+
+.light .cl-footerActionText {
+  color: #64748b !important;
+}
+
+.light .cl-footerAction {
+  color: #64748b !important;
+}
+
+.light .cl-footerActionLink {
   color: #3b82f6 !important;
+}
+
+.light .cl-footerActionLink:hover {
+  color: #2563eb !important;
+}
+
+.light .cl-footerPages {
+  color: #64748b !important;
+}
+
+.light .cl-footerPages svg,
+.light .cl-footerPages img {
+  opacity: 0.8 !important;
+}
+
+.light .cl-footerPages [class*="development"],
+.light .cl-footerPages [class*="Development"] {
+  color: #d97706 !important;
+}
+
+.light .cl-footerPagesText,
+.light .cl-footerPagesTextContainer {
+  color: #64748b !important;
+}
+
+.light .cl-footerPages svg path,
+.light .cl-footerPages svg circle,
+.light .cl-footerPages svg rect {
+  fill: #64748b !important;
+}
+
+.light [class*="cl-footer"] [class*="development"],
+.light [class*="cl-footer"] [class*="Development"],
+.light [class*="cl-cardFooter"] [class*="development"],
+.light [class*="cl-cardFooter"] [class*="Development"] {
+  color: #d97706 !important;
+}
+
+/* Light mode footer text elements */
+.light .cl-footer p,
+.light .cl-cardFooter p,
+.light .cl-footer span,
+.light .cl-cardFooter span,
+.light [class*="cl-footer"] p,
+.light [class*="cl-footer"] span,
+.light [class*="cl-cardFooter"] p,
+.light [class*="cl-cardFooter"] span {
+  line-height: 1.5 !important;
+  color: #64748b !important;
+}
+
+/* Ensure all footer text elements are properly colored in light mode */
+.light .cl-footer *,
+.light .cl-cardFooter *,
+.light [class*="cl-footer"] *:not([class*="development"]):not([class*="Development"]):not(a),
+.light [class*="cl-cardFooter"] *:not([class*="development"]):not([class*="Development"]):not(a) {
+  color: #64748b !important;
+}
+
+/* Exception for links in footer */
+.light .cl-footer a,
+.light .cl-cardFooter a,
+.light [class*="cl-footer"] a,
+.light [class*="cl-cardFooter"] a {
+  color: #3b82f6 !important;
+}
+
+.light .cl-dividerLine {
+  background-color: #e2e8f0 !important;
+}
+
+.light .cl-dividerText {
+  color: #64748b !important;
+}
+
+.light .cl-identityPreviewText {
+  color: #0f172a !important;
+}
+
+.light .cl-otpCodeFieldInput {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+.light .cl-alertText {
+  color: #475569 !important;
 }
 
 /* ============================================
@@ -755,4 +1395,12 @@ html.light body {
   to {
     transform: rotate(360deg);
   }
+}
+
+/* Logo image styling - ensure proper display in both themes */
+img[src="/logo.png"],
+img[src="/mini-logo.png"] {
+  object-fit: contain;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
 }
