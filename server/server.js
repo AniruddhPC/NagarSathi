@@ -1,22 +1,22 @@
-import 'dotenv/config';
-import express from 'express';
-import cors from 'cors';
+import "dotenv/config";
+import express from "express";
+import cors from "cors";
 
 // Import configurations
-import connectDB from './config/db.js';
+import connectDB from "./config/db.js";
 
 // Import routes
-import userRoutes from './routes/userRoutes.js';
-import issueRoutes from './routes/issueRoutes.js';
-import commentRoutes from './routes/commentRoutes.js';
-import upvoteRoutes from './routes/upvoteRoutes.js';
-import adminRoutes from './routes/adminRoutes.js';
-import geocodeRoutes from './routes/geocodeRoutes.js';
-import reportRoutes from './routes/reportRoutes.js';
-import notificationRoutes from './routes/notificationRoutes.js';
+import userRoutes from "./routes/userRoutes.js";
+import issueRoutes from "./routes/issueRoutes.js";
+import commentRoutes from "./routes/commentRoutes.js";
+import upvoteRoutes from "./routes/upvoteRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
+import geocodeRoutes from "./routes/geocodeRoutes.js";
+import reportRoutes from "./routes/reportRoutes.js";
+import notificationRoutes from "./routes/notificationRoutes.js";
 
 // Import error handlers
-import { notFound, errorHandler } from './middleware/errorHandler.js';
+import { notFound, errorHandler } from "./middleware/errorHandler.js";
 
 // Initialize Express app
 const app = express();
@@ -30,24 +30,47 @@ connectDB();
 
 // CORS configuration
 app.use(
-    cors({
-        origin: process.env.CLIENT_URL || 'http://localhost:5173',
-        credentials: true,
-        methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-        allowedHeaders: ['Content-Type', 'Authorization'],
-    })
+  cors({
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+
+      const allowedOrigins = [
+        "http://localhost:5173",
+        "http://localhost:3000",
+        "http://localhost:5174",
+        process.env.CLIENT_URL,
+      ].filter(Boolean);
+
+      // Check if origin is allowed
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        // For development, allow localhost with any port
+        if (
+          origin.startsWith("http://localhost:") ||
+          origin.startsWith("https://localhost:")
+        ) {
+          callback(null, true);
+        } else {
+          callback(new Error("Not allowed by CORS"));
+        }
+      }
+    },
+    credentials: true,
+  })
 );
 
 // Body parsers
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
 // Request logging in development
-if (process.env.NODE_ENV === 'development') {
-    app.use((req, res, next) => {
-        console.log(`${req.method} ${req.path}`);
-        next();
-    });
+if (process.env.NODE_ENV === "development") {
+  app.use((req, res, next) => {
+    console.log(`${req.method} ${req.path}`);
+    next();
+  });
 }
 
 // ============================================
@@ -55,25 +78,25 @@ if (process.env.NODE_ENV === 'development') {
 // ============================================
 
 // Health check endpoint
-app.get('/api/health', (req, res) => {
-    res.status(200).json({
-        success: true,
-        message: 'NagarSathi API is running',
-        timestamp: new Date().toISOString(),
-        environment: process.env.NODE_ENV,
-    });
+app.get("/api/health", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "NagarSathi API is running",
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV,
+  });
 });
 
 // API routes
-app.use('/api/users', userRoutes);
-app.use('/api/issues', issueRoutes);
-app.use('/api', commentRoutes); // Comments and upvotes are nested under /api/issues/:issueId
-app.use('/api/issues', upvoteRoutes);
-app.use('/api/issues', reportRoutes); // Reports are nested under /api/issues/:issueId/report
-app.use('/api/reports', reportRoutes); // Also mount at /api/reports for /my-reports
-app.use('/api/admin', adminRoutes);
-app.use('/api/geocode', geocodeRoutes);
-app.use('/api/notifications', notificationRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/issues", issueRoutes);
+app.use("/api", commentRoutes); // Comments and upvotes are nested under /api/issues/:issueId
+app.use("/api/issues", upvoteRoutes);
+app.use("/api/issues", reportRoutes); // Reports are nested under /api/issues/:issueId/report
+app.use("/api/reports", reportRoutes); // Also mount at /api/reports for /my-reports
+app.use("/api/admin", adminRoutes);
+app.use("/api/geocode", geocodeRoutes);
+app.use("/api/notifications", notificationRoutes);
 
 // ============================================
 // ERROR HANDLING
@@ -92,7 +115,7 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 5000;
 
 const server = app.listen(PORT, () => {
-    console.log(`
+  console.log(`
 ╔════════════════════════════════════════════════════════════╗
 ║                                                            ║
 ║   🏛️  NagarSathi API Server                                ║
@@ -106,16 +129,16 @@ const server = app.listen(PORT, () => {
 });
 
 // Handle unhandled promise rejections
-process.on('unhandledRejection', (err) => {
-    console.error('Unhandled Rejection:', err.message);
-    // Close server & exit process
-    server.close(() => process.exit(1));
+process.on("unhandledRejection", (err) => {
+  console.error("Unhandled Rejection:", err.message);
+  // Close server & exit process
+  server.close(() => process.exit(1));
 });
 
 // Handle uncaught exceptions
-process.on('uncaughtException', (err) => {
-    console.error('Uncaught Exception:', err.message);
-    process.exit(1);
+process.on("uncaughtException", (err) => {
+  console.error("Uncaught Exception:", err.message);
+  process.exit(1);
 });
 
 export default app;
