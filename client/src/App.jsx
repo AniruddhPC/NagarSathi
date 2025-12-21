@@ -10,6 +10,7 @@ const Home = lazy(() => import("./pages/Home"));
 const ReportIssue = lazy(() => import("./pages/ReportIssue"));
 const IssueDetail = lazy(() => import("./pages/IssueDetail"));
 const Profile = lazy(() => import("./pages/Profile"));
+const AccountSettings = lazy(() => import("./pages/AccountSettings"));
 const MapPage = lazy(() => import("./pages/MapPage"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const SignInPage = lazy(() => import("./pages/SignInPage"));
@@ -68,6 +69,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile/settings"
+          element={
+            <ProtectedRoute>
+              <AccountSettings />
             </ProtectedRoute>
           }
         />

@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
-import { SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
+import { SignedIn, SignedOut } from "@clerk/clerk-react";
+import CustomUserMenu from "./CustomUserMenu";
 import { useUserContext } from "../../context/UserContext";
 import { useTheme } from "../../context/ThemeContext";
 import NotificationDropdown from "./NotificationDropdown";
@@ -64,11 +65,10 @@ const Navbar = () => {
                   <SignedIn key={link.path}>
                     <Link
                       to={link.path}
-                      className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 nav-link ${
-                        isActive(link.path)
-                          ? "bg-primary-600 text-white"
-                          : "text-dark-300 hover:text-white hover:bg-dark-700"
-                      }`}
+                      className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 nav-link ${isActive(link.path)
+                        ? "bg-primary-600 text-white"
+                        : "text-dark-300 hover:text-white hover:bg-dark-700"
+                        }`}
                     >
                       <link.icon size={18} />
                       <span>{link.label}</span>
@@ -80,11 +80,10 @@ const Navbar = () => {
                 <Link
                   key={link.path}
                   to={link.path}
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 nav-link ${
-                    isActive(link.path)
-                      ? "bg-primary-600 text-white"
-                      : "text-dark-300 hover:text-white hover:bg-dark-700"
-                  }`}
+                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 nav-link ${isActive(link.path)
+                    ? "bg-primary-600 text-white"
+                    : "text-dark-300 hover:text-white hover:bg-dark-700"
+                    }`}
                 >
                   <link.icon size={18} />
                   <span>{link.label}</span>
@@ -96,11 +95,10 @@ const Navbar = () => {
             {isAdmin && (
               <Link
                 to="/admin"
-                className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 nav-link ${
-                  isActive("/admin")
-                    ? "bg-primary-600 text-white"
-                    : "text-amber-400 hover:text-amber-300 hover:bg-dark-700"
-                }`}
+                className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 nav-link ${isActive("/admin")
+                  ? "bg-primary-600 text-white"
+                  : "text-amber-400 hover:text-amber-300 hover:bg-dark-700"
+                  }`}
               >
                 <LayoutDashboard size={18} />
                 <span>Admin</span>
@@ -134,16 +132,9 @@ const Navbar = () => {
 
             {/* Logged in user controls */}
             <SignedIn>
-              {/* Notification & User - Desktop (visible at lg and up) */}
               <div className="hidden lg:flex items-center space-x-3 gap-2">
                 <NotificationDropdown />
-                <UserButton
-                  appearance={{
-                    elements: {
-                      avatarBox: "w-9 h-9",
-                    },
-                  }}
-                />
+                <CustomUserMenu />
               </div>
 
               {/* Notification Bell - Mobile/Tablet (below lg) */}
@@ -173,9 +164,8 @@ const Navbar = () => {
 
       {/* Mobile Menu Drawer - Slides from right */}
       <div
-        className={`fixed top-0 right-0 h-screen w-[280px] bg-dark-900 z-[70] transform transition-transform duration-300 ease-in-out lg:hidden mobile-menu-drawer ${
-          mobileMenuOpen ? "translate-x-0" : "translate-x-full"
-        }`}
+        className={`fixed top-0 right-0 h-screen w-[280px] bg-dark-900 z-[70] transform transition-transform duration-300 ease-in-out lg:hidden mobile-menu-drawer ${mobileMenuOpen ? "translate-x-0" : "translate-x-full"
+          }`}
       >
         {/* Drawer Header */}
         <div className="flex items-center justify-between p-4 border-b border-dark-700 mobile-menu-header">
@@ -198,11 +188,10 @@ const Navbar = () => {
                     <Link
                       to={link.path}
                       onClick={closeMobileMenu}
-                      className={`flex items-center space-x-3 px-4 py-3 rounded-lg mobile-menu-link ${
-                        isActive(link.path)
-                          ? "bg-primary-600 text-white"
-                          : "text-dark-300 hover:bg-dark-700"
-                      }`}
+                      className={`flex items-center space-x-3 px-4 py-3 rounded-lg mobile-menu-link ${isActive(link.path)
+                        ? "bg-primary-600 text-white"
+                        : "text-dark-300 hover:bg-dark-700"
+                        }`}
                     >
                       <link.icon size={20} />
                       <span>{link.label}</span>
@@ -215,11 +204,10 @@ const Navbar = () => {
                   key={link.path}
                   to={link.path}
                   onClick={closeMobileMenu}
-                  className={`flex items-center space-x-3 px-4 py-3 rounded-lg mobile-menu-link ${
-                    isActive(link.path)
-                      ? "bg-primary-600 text-white"
-                      : "text-dark-300 hover:bg-dark-700"
-                  }`}
+                  className={`flex items-center space-x-3 px-4 py-3 rounded-lg mobile-menu-link ${isActive(link.path)
+                    ? "bg-primary-600 text-white"
+                    : "text-dark-300 hover:bg-dark-700"
+                    }`}
                 >
                   <link.icon size={20} />
                   <span>{link.label}</span>
@@ -231,11 +219,10 @@ const Navbar = () => {
               <Link
                 to="/admin"
                 onClick={closeMobileMenu}
-                className={`flex items-center space-x-3 px-4 py-3 rounded-lg mobile-menu-link ${
-                  isActive("/admin")
-                    ? "bg-primary-600 text-white"
-                    : "text-amber-400 hover:bg-dark-700"
-                }`}
+                className={`flex items-center space-x-3 px-4 py-3 rounded-lg mobile-menu-link ${isActive("/admin")
+                  ? "bg-primary-600 text-white"
+                  : "text-amber-400 hover:bg-dark-700"
+                  }`}
               >
                 <LayoutDashboard size={20} />
                 <span>Admin Dashboard</span>
@@ -253,10 +240,20 @@ const Navbar = () => {
 
             {/* User Info - Mobile */}
             <SignedIn>
-              <div className="flex items-center space-x-3 px-4 py-3 border-t border-dark-700 mt-4 pt-4 mobile-menu-user">
-                <UserButton />
-                {user && <span className="text-dark-300">{user.name}</span>}
-              </div>
+              <Link
+                to="/profile"
+                onClick={closeMobileMenu}
+                className="flex items-center space-x-3 px-4 py-3 border-t border-dark-700 mt-4 pt-4 mobile-menu-user hover:bg-dark-700 transition-colors"
+              >
+                <img
+                  src={user?.imageUrl}
+                  alt={user?.fullName}
+                  className="w-8 h-8 rounded-full border border-dark-600"
+                />
+                <span className="text-dark-300 font-medium">
+                  {user?.fullName || user?.username}
+                </span>
+              </Link>
             </SignedIn>
 
             {/* Sign In Link - Mobile (for signed out users) */}
