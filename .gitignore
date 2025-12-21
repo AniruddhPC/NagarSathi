@@ -16,6 +16,7 @@ build/
 .next/
 out/
 
+
 # Logs
 logs/
 *.log
