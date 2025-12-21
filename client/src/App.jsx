@@ -1,6 +1,6 @@
 import { lazy, Suspense } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { SignIn, SignUp, SignedIn, SignedOut } from "@clerk/clerk-react";
+import { SignedIn, SignedOut } from "@clerk/clerk-react";
 import { useUserContext } from "./context/UserContext";
 import { PageLoader } from "./components/common/Loader";
 
@@ -12,6 +12,8 @@ const IssueDetail = lazy(() => import("./pages/IssueDetail"));
 const Profile = lazy(() => import("./pages/Profile"));
 const MapPage = lazy(() => import("./pages/MapPage"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
+const SignInPage = lazy(() => import("./pages/SignInPage"));
+const SignUpPage = lazy(() => import("./pages/SignUpPage"));
 
 /**
  * Protected Route Component
@@ -49,36 +51,8 @@ function App() {
         <Route path="/issues/:id" element={<IssueDetail />} />
 
         {/* Auth Routes */}
-        <Route
-          path="/sign-in/*"
-          element={
-            <div className="min-h-screen bg-dark-900 flex items-center justify-center p-4 sm:p-6 lg:p-8">
-              <div className="w-full max-w-md">
-                <SignIn
-                  routing="path"
-                  path="/sign-in"
-                  signUpUrl="/sign-up"
-                  afterSignInUrl="/"
-                />
-              </div>
-            </div>
-          }
-        />
-        <Route
-          path="/sign-up/*"
-          element={
-            <div className="min-h-screen bg-dark-900 flex items-center justify-center p-4 sm:p-6 lg:p-8">
-              <div className="w-full max-w-md">
-                <SignUp
-                  routing="path"
-                  path="/sign-up"
-                  signInUrl="/sign-in"
-                  afterSignUpUrl="/"
-                />
-              </div>
-            </div>
-          }
-        />
+        <Route path="/sign-in/*" element={<SignInPage />} />
+        <Route path="/sign-up/*" element={<SignUpPage />} />
 
         {/* Protected Routes */}
         <Route
