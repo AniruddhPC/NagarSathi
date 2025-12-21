@@ -6,6 +6,7 @@ import Footer from '../components/common/Footer';
 import IssueForm from '../components/issues/IssueForm';
 import { issueApi } from '../services/api';
 import toast from 'react-hot-toast';
+import { useTheme } from '../context/ThemeContext';
 
 /**
  * Report Issue Page Component
@@ -14,6 +15,7 @@ import toast from 'react-hot-toast';
 const ReportIssue = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
+    const { isDark } = useTheme();
 
     const handleSubmit = async (formData) => {
         try {
@@ -54,12 +56,12 @@ const ReportIssue = () => {
 
                     {/* Tips - Aside on desktop, top on mobile */}
                     <aside className="w-full lg:w-72 flex-shrink-0 order-1 lg:order-2">
-                        <div className="lg:sticky lg:top-24 bg-primary-500/10 border border-primary-500/30 rounded-xl p-4">
+                        <div className="lg:sticky lg:top-24 bg-blue-50 dark:bg-primary-500/10 border border-blue-200 dark:border-primary-500/30 rounded-xl p-4 shadow-sm dark:shadow-none">
                             <div className="flex gap-3">
-                                <AlertTriangle size={20} className="text-primary-400 flex-shrink-0 mt-0.5" />
+                                <AlertTriangle size={20} className="text-blue-600 dark:text-primary-400 flex-shrink-0 mt-0.5" />
                                 <div>
-                                    <p className="text-primary-300 font-medium mb-2">Tips for effective reporting:</p>
-                                    <ul className="text-primary-300/80 text-sm space-y-2">
+                                    <p className="font-medium mb-2" style={{ color: isDark ? '#93c5fd' : '#0f172a' }}>Tips for effective reporting:</p>
+                                    <ul className="text-sm space-y-2" style={{ color: isDark ? 'rgba(147, 197, 253, 0.8)' : '#334155' }}>
                                         <li>• Be specific about the location and problem</li>
                                         <li>• Include clear photos of the issue</li>
                                         <li>• Allow location access for accurate GPS tagging</li>
