@@ -1339,6 +1339,133 @@ html.light body {
   color: #ef4444 !important;
 }
 
+/* Ensure SVG icons in buttons inherit hover colors */
+.light table td button:hover svg,
+.light table td a:hover svg {
+  color: inherit !important;
+}
+
+/* Grouped Reports Table - Light Theme */
+
+/* Group header hover state */
+.light div[class*="cursor-pointer"][class*="hover:bg-dark-700"]:hover,
+.light div.cursor-pointer:hover {
+  background-color: #f1f5f9 !important;
+}
+
+/* Expand arrow button hover */
+.light button[class*="hover:text-white"]:hover,
+.light button.text-dark-400:hover {
+  color: #0f172a !important;
+}
+
+.light button[class*="hover:text-white"]:hover svg {
+  color: #0f172a !important;
+}
+
+/* Issue link in grouped reports */
+.light a[class*="hover:text-primary-400"]:hover {
+  color: #3b82f6 !important;
+}
+
+/* Report item cards background - normal state */
+.light div[class*="bg-dark-800"][class*="rounded-lg"] {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* Expanded reports section background */
+.light div[class*="bg-dark-900"] {
+  background-color: #f8fafc !important;
+}
+
+/* Report review button hover */
+.light button[class*="hover:text-primary-400"][class*="hover:bg-dark-700"]:hover,
+.light button[title="Review Report"]:hover {
+  background-color: #e2e8f0 !important;
+  color: #3b82f6 !important;
+}
+
+.light button[class*="hover:text-primary-400"][class*="hover:bg-dark-700"]:hover svg {
+  color: #3b82f6 !important;
+}
+
+/* Pagination buttons hover */
+.light button[class*="hover:bg-dark-700"][class*="hover:text-white"]:hover {
+  background-color: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+.light button[class*="hover:bg-dark-700"][class*="hover:text-white"]:hover svg {
+  color: #0f172a !important;
+}
+
+/* Pagination page number badge */
+.light span[class*="bg-dark-700"] {
+  background-color: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+/* Tab buttons hover in admin dashboard - exclude active tabs */
+.light button:not([class*="bg-primary"]):hover {
+  background-color: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+.light button:not([class*="bg-primary"]):hover svg {
+  color: #0f172a !important;
+}
+
+/* More specific: buttons with rounded-lg and text-dark-400 */
+.light button.rounded-lg.text-dark-400:hover,
+.light a.rounded-lg.text-dark-400:hover {
+  background-color: #e2e8f0 !important;
+}
+
+/* Reason tags background in light theme */
+.light span[class*="bg-dark-600"] {
+  background-color: #e2e8f0 !important;
+  color: #475569 !important;
+}
+
+/* Stats bar dividers */
+.light div[class*="bg-dark-600"][class*="w-px"] {
+  background-color: #cbd5e1 !important;
+}
+
+/* Review note background */
+.light div[class*="bg-dark-700"] {
+  background-color: #f1f5f9 !important;
+  color: #475569 !important;
+}
+
+/* Empty state icon background */
+.light div[class*="bg-dark-700"][class*="rounded-full"] {
+  background-color: #e2e8f0 !important;
+}
+
+.light div[class*="bg-dark-700"][class*="rounded-full"] svg {
+  color: #64748b !important;
+}
+
+/* Grouped reports container background */
+.light div[class*="bg-dark-800"][class*="border"][class*="rounded-xl"] {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* Stats bar background - more specific targeting */
+.light div[class*="flex flex-wrap items-center gap-4"][class*="bg-dark-800"] {
+  background-color: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* Pagination container background */
+.light div[class*="flex items-center justify-between"][class*="bg-dark-800"] {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+
 /* ============================================
    RESPONSIVE UTILITIES
    ============================================ */
