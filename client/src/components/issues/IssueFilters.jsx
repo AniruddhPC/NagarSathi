@@ -259,7 +259,7 @@ const IssueFilters = ({
               {statuses.map((status) => (
                 <label
                   key={status.value}
-                  className="flex items-center gap-3 cursor-pointer group px-1 py-1 rounded-md hover:bg-dark-700/50 transition-colors"
+                  className="flex items-center gap-3 cursor-pointer group px-1 py-1 rounded-md hover:bg-dark-700/50 transition-colors filter-option"
                 >
                   <input
                     type="checkbox"
@@ -308,7 +308,7 @@ const IssueFilters = ({
               {displayedStates.map((state) => (
                 <label
                   key={state.value}
-                  className="flex items-center gap-3 cursor-pointer group px-1 py-1 rounded-md hover:bg-dark-700/50 transition-colors"
+                  className="flex items-center gap-3 cursor-pointer group px-1 py-1 rounded-md hover:bg-dark-700/50 transition-colors filter-option"
                 >
                   <input
                     type="checkbox"
@@ -359,7 +359,7 @@ const IssueFilters = ({
                 {displayedDistricts.map((district) => (
                   <label
                     key={district.value}
-                    className="flex items-center gap-3 cursor-pointer group px-1 py-1 rounded-md hover:bg-dark-700/50 transition-colors"
+                    className="flex items-center gap-3 cursor-pointer group px-1 py-1 rounded-md hover:bg-dark-700/50 transition-colors filter-option"
                   >
                     <input
                       type="checkbox"
@@ -399,9 +399,9 @@ const IssueFilters = ({
             onClick={() => toggleSection("categories")}
             className="flex items-center justify-between w-full text-left hover:opacity-80 transition-opacity"
           >
-            <span className="font-semibold text-white text-sm">Category</span>
+            <span className="font-semibold text-white text-sm hover:opacity-80">Category</span>
             {expandedSections.categories ? (
-              <ChevronUp size={16} className="text-dark-400" />
+              <ChevronUp size={16} className="text-dark-400 hover:opacity-80" />
             ) : (
               <ChevronDown size={16} className="text-dark-400" />
             )}
@@ -411,7 +411,7 @@ const IssueFilters = ({
               {categories.map((cat) => (
                 <label
                   key={cat.value}
-                  className="flex items-center gap-3 cursor-pointer group px-1 py-1 rounded-md hover:bg-dark-700/50 transition-colors"
+                  className="flex items-center gap-3 cursor-pointer group px-1 py-1 rounded-md hover:bg-dark-700/50 transition-colors filter-option"
                 >
                   <input
                     type="checkbox"
@@ -440,7 +440,7 @@ const IssueFilters = ({
               variant="ghost"
               icon={X}
               onClick={onReset}
-              className="w-full text-dark-400 hover:text-white text-sm py-2.5 rounded-lg hover:bg-dark-700/50 transition-all"
+              className="w-full text-dark-400 hover:text-white text-sm py-2.5 rounded-lg hover:bg-dark-700/50 transition-all filter-reset-button"
             >
               Clear All Filters ({activeFiltersCount})
             </Button>

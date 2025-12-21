@@ -205,6 +205,234 @@ html.light body {
   background-color: #f1f5f9 !important;
 }
 
+/* Light mode navbar header */
+.light .navbar-header {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border-color: #e2e8f0 !important;
+}
+
+.light .navbar-logo-text {
+  color: #0f172a !important;
+}
+
+/* Light mode navbar links */
+.light .nav-link {
+  color: #475569 !important;
+}
+
+.light .nav-link:hover {
+  color: #0f172a !important;
+  background-color: #f1f5f9 !important;
+}
+
+.light .nav-link.bg-primary-600 {
+  background-color: #3b82f6 !important;
+  color: #ffffff !important;
+}
+
+/* Light mode navbar theme toggle */
+.light .nav-theme-toggle {
+  color: #475569 !important;
+}
+
+.light .nav-theme-toggle:hover {
+  color: #0f172a !important;
+  background-color: #f1f5f9 !important;
+}
+
+/* Light mode navbar sign in button */
+.light .navbar-signin {
+  color: #475569 !important;
+}
+
+.light .navbar-signin:hover {
+  color: #0f172a !important;
+  background-color: #f1f5f9 !important;
+}
+
+/* Light mode navbar user text */
+.light .navbar-user-text {
+  color: #64748b !important;
+}
+
+/* Light mode navbar mobile toggle */
+.light .nav-mobile-toggle {
+  color: #475569 !important;
+}
+
+.light .nav-mobile-toggle:hover {
+  color: #0f172a !important;
+}
+
+/* Light mode mobile menu overlay */
+.light .mobile-menu-overlay {
+  background-color: rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Light mode mobile menu drawer */
+.light .mobile-menu-drawer {
+  background-color: #ffffff !important;
+  border-left: 1px solid #e2e8f0 !important;
+}
+
+/* Light mode mobile menu header */
+.light .mobile-menu-header {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+
+.light .mobile-menu-header .text-white {
+  color: #0f172a !important;
+}
+
+/* Light mode mobile menu close button */
+.light .mobile-menu-close {
+  color: #64748b !important;
+}
+
+.light .mobile-menu-close:hover {
+  color: #0f172a !important;
+  background-color: #f1f5f9 !important;
+}
+
+/* Light mode mobile menu links */
+.light .mobile-menu-link {
+  color: #475569 !important;
+}
+
+.light .mobile-menu-link:hover {
+  color: #0f172a !important;
+  background-color: #f1f5f9 !important;
+}
+
+.light .mobile-menu-link.bg-primary-600 {
+  background-color: #3b82f6 !important;
+  color: #ffffff !important;
+}
+
+.light .mobile-menu-link.text-amber-400 {
+  color: #f59e0b !important;
+}
+
+.light .mobile-menu-link.text-amber-400:hover {
+  color: #d97706 !important;
+  background-color: #fef3c7 !important;
+}
+
+/* Light mode mobile menu user section */
+.light .mobile-menu-user {
+  border-color: #e2e8f0 !important;
+}
+
+.light .mobile-menu-user .text-dark-300 {
+  color: #475569 !important;
+}
+
+/* Light mode filter sidebar options */
+.light .filter-option:hover {
+  background-color: #f1f5f9 !important;
+}
+
+.light .filter-option .text-dark-300 {
+  color: #475569 !important;
+}
+
+.light .filter-option:hover .text-dark-300 {
+  color: #0f172a !important;
+}
+
+.light .filter-option .text-dark-400 {
+  color: #64748b !important;
+}
+
+.light .filter-option:hover .text-dark-400 {
+  color: #475569 !important;
+}
+
+.light .filter-option .bg-dark-600 {
+  background-color: #e2e8f0 !important;
+}
+
+.light .filter-option:hover .bg-dark-600 {
+  background-color: #cbd5e1 !important;
+}
+
+/* Light mode filter reset button */
+.light .filter-reset-button {
+  color: #64748b !important;
+}
+
+.light .filter-reset-button:hover {
+  color: #0f172a !important;
+  background-color: #f1f5f9 !important;
+}
+
+/* Light mode home page sign in button */
+.light .home-signin-button .btn-primary {
+  background-color: #3b82f6 !important;
+  color: #ffffff !important;
+}
+
+.light .home-signin-button .btn-primary:hover {
+  background-color: #2563eb !important;
+}
+
+/* Light mode navbar buttons */
+.light .btn-primary {
+  background-color: #3b82f6 !important;
+  color: #ffffff !important;
+}
+
+.light .btn-primary:hover {
+  background-color: #2563eb !important;
+}
+
+.light .btn-ghost {
+  color: #475569 !important;
+}
+
+.light .btn-ghost:hover {
+  color: #0f172a !important;
+  background-color: #f1f5f9 !important;
+}
+
+/* Light mode spot a problem card */
+.light .spot-problem-card {
+  background: linear-gradient(to bottom right, #3b82f6, #2563eb) !important;
+}
+
+.light .spot-problem-title {
+  color: #ffffff !important;
+}
+
+.light .spot-problem-description {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Spot problem button - default (dark theme) */
+.spot-problem-button {
+  background-color: #ffffff !important;
+  color: #3b82f6 !important;
+  border: none !important;
+}
+
+.spot-problem-button:hover {
+  background-color: #eff6ff !important;
+  color: #2563eb !important;
+}
+
+/* Light theme - button should be white with blue text (same as dark since it's on blue gradient) */
+.light .spot-problem-button {
+  background-color: #ffffff !important;
+  color: #3b82f6 !important;
+  border: none !important;
+}
+
+.light .spot-problem-button:hover {
+  background-color: #eff6ff !important;
+  color: #2563eb !important;
+}
+
 /* Custom scrollbar - Dark mode (default) */
 ::-webkit-scrollbar {
   width: 8px;
@@ -255,7 +483,7 @@ html.light body {
 
   /* Primary button */
   .btn-primary {
-    @apply bg-primary-600 hover:bg-primary-700 text-white font-medium py-2.5 px-5 rounded-lg transition-all duration-200 ease-out transform hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-dark-900 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100;
+    @apply bg-primary-600 hover:bg-primary-700 text-white font-medium py-2.5 px-5 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-dark-900 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100;
   }
 
   /* Secondary button */
@@ -465,8 +693,15 @@ html.light body {
 
 /* Float animation */
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 .animate-float {
@@ -475,8 +710,15 @@ html.light body {
 
 /* Pulse Glow animation */
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); }
-  50% { box-shadow: 0 0 20px 0 rgba(59, 130, 246, 0.7); }
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+  }
+
+  50% {
+    box-shadow: 0 0 20px 0 rgba(59, 130, 246, 0.7);
+  }
 }
 
 .animate-pulse-glow {
@@ -485,8 +727,15 @@ html.light body {
 
 /* Slide Up animation (for text) */
 @keyframes slide-up-fade {
-  0% { transform: translateY(20px); opacity: 0; }
-  100% { transform: translateY(0); opacity: 1; }
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .animate-slide-up-fade {
@@ -497,7 +746,13 @@ html.light body {
 .animate-spin-slow {
   animation: spin 8s linear infinite;
 }
+
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }

@@ -38,7 +38,7 @@ const Navbar = () => {
     const closeMobileMenu = () => setMobileMenuOpen(false);
 
     return (
-        <nav className="sticky top-0 z-50 bg-dark-900/80 backdrop-blur-lg border-b border-dark-700">
+        <nav className="sticky top-0 z-50 bg-dark-900/80 backdrop-blur-lg border-b border-dark-700 navbar-header">
             <div className="w-full px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
                     {/* Logo */}
@@ -46,7 +46,7 @@ const Navbar = () => {
                         <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-700 rounded-xl flex items-center justify-center">
                             <span className="text-white font-bold text-xl">N</span>
                         </div>
-                        <span className="text-xl font-bold text-white hidden sm:block">
+                        <span className="text-xl font-bold text-white hidden sm:block navbar-logo-text">
                             Nagar<span className="text-primary-400">Sathi</span>
                         </span>
                     </Link>
@@ -59,7 +59,7 @@ const Navbar = () => {
                                     <SignedIn key={link.path}>
                                         <Link
                                             to={link.path}
-                                            className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 ${isActive(link.path)
+                                            className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 nav-link ${isActive(link.path)
                                                 ? 'bg-primary-600 text-white'
                                                 : 'text-dark-300 hover:text-white hover:bg-dark-700'
                                                 }`}
@@ -74,7 +74,7 @@ const Navbar = () => {
                                 <Link
                                     key={link.path}
                                     to={link.path}
-                                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 ${isActive(link.path)
+                                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 nav-link ${isActive(link.path)
                                         ? 'bg-primary-600 text-white'
                                         : 'text-dark-300 hover:text-white hover:bg-dark-700'
                                         }`}
@@ -89,7 +89,7 @@ const Navbar = () => {
                         {isAdmin && (
                             <Link
                                 to="/admin"
-                                className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 ${isActive('/admin')
+                                className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 nav-link ${isActive('/admin')
                                     ? 'bg-primary-600 text-white'
                                     : 'text-amber-400 hover:text-amber-300 hover:bg-dark-700'
                                     }`}
@@ -102,7 +102,7 @@ const Navbar = () => {
                         {/* Theme Toggle */}
                         <button
                             onClick={toggleTheme}
-                            className="p-2 rounded-lg text-dark-300 hover:text-white hover:bg-dark-700 transition-all duration-200"
+                            className="p-2 rounded-lg text-dark-300 hover:text-white hover:bg-dark-700 transition-all duration-200 nav-theme-toggle"
                             title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
                         >
                             {isDark ? <Sun size={18} /> : <Moon size={18} />}
@@ -113,7 +113,7 @@ const Navbar = () => {
                     <div className="flex items-center space-x-2 sm:space-x-4">
                         {/* Sign In/Up - Always visible for logged out users */}
                         <SignedOut>
-                            <Link to="/sign-in" className="btn-ghost text-sm hidden sm:inline-flex">
+                            <Link to="/sign-in" className="btn-ghost text-sm hidden sm:inline-flex navbar-signin">
                                 Sign In
                             </Link>
                             <Link to="/sign-up" className="btn-primary text-sm">
@@ -127,7 +127,7 @@ const Navbar = () => {
                             <div className="hidden lg:flex items-center space-x-3">
                                 <NotificationDropdown />
                                 {user && (
-                                    <span className="text-dark-400 text-sm">
+                                    <span className="text-dark-400 text-sm navbar-user-text">
                                         Hi, {user.name?.split(' ')[0]}
                                     </span>
                                 )}
@@ -149,7 +149,7 @@ const Navbar = () => {
                         {/* Mobile Menu Button - visible below lg */}
                         <button
                             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                            className="lg:hidden p-2 text-dark-300 hover:text-white"
+                            className="lg:hidden p-2 text-dark-300 hover:text-white nav-mobile-toggle"
                         >
                             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                         </button>
@@ -160,20 +160,20 @@ const Navbar = () => {
             {/* Mobile Menu Overlay */}
             {mobileMenuOpen && (
                 <div
-                    className="fixed inset-0 bg-black/60 z-[60] lg:hidden"
+                    className="fixed inset-0 bg-black/60 z-[60] lg:hidden mobile-menu-overlay"
                     onClick={closeMobileMenu}
                 />
             )}
 
             {/* Mobile Menu Drawer - Slides from right */}
-            <div className={`fixed top-0 right-0 h-screen w-[280px] bg-dark-900 z-[70] transform transition-transform duration-300 ease-in-out lg:hidden ${mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+            <div className={`fixed top-0 right-0 h-screen w-[280px] bg-dark-900 z-[70] transform transition-transform duration-300 ease-in-out lg:hidden mobile-menu-drawer ${mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
                 }`}>
                 {/* Drawer Header */}
-                <div className="flex items-center justify-between p-4 border-b border-dark-700">
+                <div className="flex items-center justify-between p-4 border-b border-dark-700 mobile-menu-header">
                     <span className="text-lg font-semibold text-white">Menu</span>
                     <button
                         onClick={closeMobileMenu}
-                        className="p-2 rounded-lg text-dark-400 hover:text-white hover:bg-dark-700 transition-colors"
+                        className="p-2 rounded-lg text-dark-400 hover:text-white hover:bg-dark-700 transition-colors mobile-menu-close"
                     >
                         <X size={20} />
                     </button>
@@ -189,7 +189,7 @@ const Navbar = () => {
                                         <Link
                                             to={link.path}
                                             onClick={closeMobileMenu}
-                                            className={`flex items-center space-x-3 px-4 py-3 rounded-lg ${isActive(link.path)
+                                            className={`flex items-center space-x-3 px-4 py-3 rounded-lg mobile-menu-link ${isActive(link.path)
                                                 ? 'bg-primary-600 text-white'
                                                 : 'text-dark-300 hover:bg-dark-700'
                                                 }`}
@@ -205,7 +205,7 @@ const Navbar = () => {
                                     key={link.path}
                                     to={link.path}
                                     onClick={closeMobileMenu}
-                                    className={`flex items-center space-x-3 px-4 py-3 rounded-lg ${isActive(link.path)
+                                    className={`flex items-center space-x-3 px-4 py-3 rounded-lg mobile-menu-link ${isActive(link.path)
                                         ? 'bg-primary-600 text-white'
                                         : 'text-dark-300 hover:bg-dark-700'
                                         }`}
@@ -220,7 +220,7 @@ const Navbar = () => {
                             <Link
                                 to="/admin"
                                 onClick={closeMobileMenu}
-                                className={`flex items-center space-x-3 px-4 py-3 rounded-lg ${isActive('/admin')
+                                className={`flex items-center space-x-3 px-4 py-3 rounded-lg mobile-menu-link ${isActive('/admin')
                                     ? 'bg-primary-600 text-white'
                                     : 'text-amber-400 hover:bg-dark-700'
                                     }`}
@@ -233,7 +233,7 @@ const Navbar = () => {
                         {/* Theme Toggle - Mobile */}
                         <button
                             onClick={toggleTheme}
-                            className="flex items-center space-x-3 px-4 py-3 rounded-lg text-dark-300 hover:bg-dark-700 w-full text-left"
+                            className="flex items-center space-x-3 px-4 py-3 rounded-lg text-dark-300 hover:bg-dark-700 w-full text-left mobile-menu-link"
                         >
                             {isDark ? <Sun size={20} /> : <Moon size={20} />}
                             <span>{isDark ? 'Light Mode' : 'Dark Mode'}</span>
@@ -241,7 +241,7 @@ const Navbar = () => {
 
                         {/* User Info - Mobile */}
                         <SignedIn>
-                            <div className="flex items-center space-x-3 px-4 py-3 border-t border-dark-700 mt-4 pt-4">
+                            <div className="flex items-center space-x-3 px-4 py-3 border-t border-dark-700 mt-4 pt-4 mobile-menu-user">
                                 <UserButton />
                                 {user && (
                                     <span className="text-dark-300">{user.name}</span>
@@ -254,7 +254,7 @@ const Navbar = () => {
                             <Link
                                 to="/sign-in"
                                 onClick={closeMobileMenu}
-                                className="flex items-center space-x-3 px-4 py-3 rounded-lg text-dark-300 hover:bg-dark-700 border-t border-dark-700 mt-4 pt-4"
+                                className="flex items-center space-x-3 px-4 py-3 rounded-lg text-dark-300 hover:bg-dark-700 border-t border-dark-700 mt-4 pt-4 mobile-menu-link"
                             >
                                 <User size={20} />
                                 <span>Sign In</span>

@@ -22,6 +22,8 @@ const Button = ({
         ghost: 'text-dark-300 hover:text-white hover:bg-dark-700/50 focus:ring-dark-500',
         danger: 'bg-red-600 hover:bg-red-700 text-white focus:ring-red-500',
         success: 'bg-emerald-600 hover:bg-emerald-700 text-white focus:ring-emerald-500',
+        white: 'bg-white dark:bg-primary-600 text-primary-600 dark:text-white hover:bg-primary-50 dark:hover:bg-primary-700 border-none shadow-md hover:shadow-lg transition-all',
+        blue: 'bg-primary-600 hover:bg-primary-700 text-white focus:ring-primary-500',
     };
 
     const sizes = {

@@ -127,8 +127,9 @@ const Home = () => {
             </SignedIn>
             <SignedOut>
               <Link to="/sign-in">
-                <Button icon={Plus} className="!px-3 md:!px-4">
-                  <span className="hidden md:inline">Sign In</span>
+                <Button color="white" className="!px-3 md:!px-4 btn-primary">
+                  <Plus className="!text-white" size={18} />
+                  <span className="hidden md:inline !text-white">Sign In</span>
                 </Button>
               </Link>
             </SignedOut>
