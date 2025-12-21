@@ -387,7 +387,7 @@ const IssueDetail = () => {
                         <Button
                             variant="danger"
                             onClick={confirmDelete}
-                            className="flex-1 bg-red-600 hover:bg-red-700 text-white"
+                            className="flex-1 bg-red-600 hover:bg-red-700 !text-white"
                             loading={deleting}
                         >
                             Delete

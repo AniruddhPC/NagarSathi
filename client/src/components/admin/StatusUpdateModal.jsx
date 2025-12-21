@@ -111,7 +111,7 @@ const StatusUpdateModal = ({ isOpen, onClose, issue, onSubmit, loading = false }
                                 type="button"
                                 onClick={() => setStatus(s)}
                                 className={`px-4 py-2 rounded-lg border text-sm font-medium transition-all ${status === s
-                                        ? 'bg-primary-600 border-primary-500 text-white'
+                                        ? 'bg-primary-600 border-primary-500 !text-white'
                                         : 'bg-dark-700 border-dark-600 text-dark-300 hover:border-dark-500'
                                     }`}
                             >
