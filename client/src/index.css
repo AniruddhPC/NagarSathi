@@ -1339,6 +1339,76 @@ html.light body {
   color: #ef4444 !important;
 }
 
+/* Grouped Reports Table - Report Card Backgrounds */
+.light .bg-dark-800 {
+  background-color: #ffffff !important;
+}
+
+.light .bg-dark-900\/50 {
+  background-color: #f8fafc !important;
+}
+
+/* Grouped Reports Table - Group Header Row Hover */
+.light .bg-dark-800>div.cursor-pointer:hover {
+  background-color: #f1f5f9 !important;
+}
+
+/* Grouped Reports Table - Expand/Collapse Button Hover */
+.light .bg-dark-800 button.text-dark-400:hover {
+  color: #0f172a !important;
+}
+
+/* Grouped Reports Table - Review Button Hover (Eye icon) */
+.light .bg-dark-800 button[title="Review Report"]:hover {
+  background-color: #e2e8f0 !important;
+  color: #3b82f6 !important;
+}
+
+/* Grouped Reports Table - Pagination Button Hover */
+.light .bg-dark-800 button.p-2.rounded-lg.text-dark-400:hover {
+  background-color: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+/* Grouped Reports Table - Link Hover in Light Theme */
+.light .bg-dark-800 a.text-white:hover,
+.light .bg-dark-800 a.font-medium:hover {
+  color: #3b82f6 !important;
+}
+
+/* Override Tailwind hover utilities in light theme for grouped reports */
+/* Target elements with hover:bg-dark-700 classes */
+.light .bg-dark-800 .hover\:bg-dark-700:hover {
+  background-color: #e2e8f0 !important;
+}
+
+.light .bg-dark-800 .hover\:bg-dark-700\/50:hover {
+  background-color: #f1f5f9 !important;
+}
+
+.light .bg-dark-800 .hover\:text-white:hover {
+  color: #0f172a !important;
+}
+
+/* Additional universal overrides for hover states in grouped reports table */
+.light .bg-dark-800 div[class*="hover"]:hover {
+  /* More specific rules above will take precedence */
+}
+
+.light .bg-dark-800 button[class*="hover"]:hover {
+  /* More specific rules above will take precedence */
+}
+
+/* Ensure report cards have proper backgrounds in light theme */
+.light .bg-dark-800 .bg-dark-800 {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+
+.light .bg-dark-800 .border-dark-700 {
+  border-color: #e2e8f0 !important;
+}
+
 /* ============================================
    RESPONSIVE UTILITIES
    ============================================ */
