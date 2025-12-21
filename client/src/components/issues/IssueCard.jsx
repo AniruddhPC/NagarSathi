@@ -144,14 +144,14 @@ const IssueCard = ({ issue }) => {
                             <>
                                 <button
                                     onClick={prevImage}
-                                    className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-dark-900/80 backdrop-blur-md text-white flex items-center justify-center opacity-0 group-hover/image:opacity-100 transition-all duration-200 hover:bg-dark-800 hover:scale-110 shadow-lg"
+                                    className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-dark-900/80 backdrop-blur-md text-white flex items-center justify-center opacity-0 group-hover/image:opacity-100 transition-all duration-200 hover:bg-dark-800 hover:scale-110 shadow-lg image-nav-button"
                                     aria-label="Previous image"
                                 >
                                     <ChevronLeft size={18} className="sm:w-5 sm:h-5" />
                                 </button>
                                 <button
                                     onClick={nextImage}
-                                    className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-dark-900/80 backdrop-blur-md text-white flex items-center justify-center opacity-0 group-hover/image:opacity-100 transition-all duration-200 hover:bg-dark-800 hover:scale-110 shadow-lg"
+                                    className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-dark-900/80 backdrop-blur-md text-white flex items-center justify-center opacity-0 group-hover/image:opacity-100 transition-all duration-200 hover:bg-dark-800 hover:scale-110 shadow-lg image-nav-button"
                                     aria-label="Next image"
                                 >
                                     <ChevronRight size={18} className="sm:w-5 sm:h-5" />
@@ -161,7 +161,7 @@ const IssueCard = ({ issue }) => {
 
                         {/* Dots Indicator */}
                         {hasMultipleImages && (
-                            <div className="absolute bottom-2 sm:bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2 py-1 sm:py-1.5 bg-dark-900/60 backdrop-blur-md rounded-full">
+                            <div className="absolute bottom-2 sm:bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2 py-1 sm:py-1.5 bg-dark-900/60 backdrop-blur-md rounded-full image-dots-container">
                                 {issue.images.map((_, idx) => (
                                     <button
                                         key={idx}
@@ -173,7 +173,7 @@ const IssueCard = ({ issue }) => {
                                         className={`rounded-full transition-all duration-200 ${
                                             idx === currentImageIndex
                                                 ? 'bg-primary-400 w-2 h-2 sm:w-2.5 sm:h-2.5'
-                                                : 'bg-white/40 hover:bg-white/60 w-1.5 h-1.5 sm:w-2 sm:h-2'
+                                                : 'bg-white/40 hover:bg-white/60 w-1.5 h-1.5 sm:w-2 sm:h-2 image-dot'
                                         }`}
                                         aria-label={`Go to image ${idx + 1}`}
                                     />
@@ -183,7 +183,7 @@ const IssueCard = ({ issue }) => {
 
                         {/* Image counter */}
                         {hasMultipleImages && (
-                            <div className="absolute top-2 sm:top-3 right-2 sm:right-3 bg-dark-900/80 backdrop-blur-md px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs text-white font-medium shadow-lg">
+                            <div className="absolute top-2 sm:top-3 right-2 sm:right-3 bg-dark-900/80 backdrop-blur-md px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs text-white font-medium shadow-lg image-counter">
                                 {currentImageIndex + 1}/{issue.images.length}
                             </div>
                         )}
@@ -312,7 +312,7 @@ const IssueCard = ({ issue }) => {
                 issueTitle={issue.title}
             />
 
-            {/* Share Modal */}
+            {/* Share Modal - Revamped */}
             {shareMenuOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
                     {/* Backdrop */}
@@ -322,22 +322,25 @@ const IssueCard = ({ issue }) => {
                     />
 
                     {/* Dialog */}
-                    <div className="relative bg-dark-800 border border-dark-600 rounded-2xl shadow-2xl w-full max-w-sm animate-scale-in">
+                    <div className="relative bg-dark-800 border border-dark-600 rounded-2xl shadow-2xl w-full max-w-md animate-fade-in">
                         {/* Header */}
-                        <div className="flex items-center justify-between px-5 py-4 border-b border-dark-700">
-                            <h3 className="text-lg font-semibold text-white">Share</h3>
+                        <div className="flex items-center justify-between px-6 py-4 border-b border-dark-700">
+                            <div>
+                                <h3 className="text-lg font-semibold text-white">Share Issue</h3>
+                                <p className="text-xs text-dark-400 mt-0.5">Choose how you want to share</p>
+                            </div>
                             <button
                                 onClick={() => setShareMenuOpen(false)}
-                                className="p-1.5 rounded-lg text-dark-400 hover:text-white hover:bg-dark-700 transition-all"
+                                className="p-2 rounded-lg text-dark-400 hover:text-white hover:bg-dark-700 transition-all modal-close-button"
                                 aria-label="Close share menu"
                             >
                                 <X size={20} />
                             </button>
                         </div>
 
-                        {/* Share Options Grid */}
-                        <div className="p-5">
-                            <div className="grid grid-cols-4 gap-4">
+                        {/* Share Options Grid - Improved Layout */}
+                        <div className="p-6">
+                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                                 {shareOptions.map((option) => (
                                     <button
                                         key={option.name}
@@ -345,48 +348,69 @@ const IssueCard = ({ issue }) => {
                                             option.action();
                                             setShareMenuOpen(false);
                                         }}
-                                        className="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-dark-700 transition-all group"
+                                        className="flex flex-col items-center gap-2.5 p-4 rounded-xl bg-dark-700/30 border border-dark-600/50 hover:bg-dark-700 hover:border-primary-500/50 hover:shadow-lg hover:shadow-primary-500/10 transition-all duration-200 group active:scale-95 share-option-button"
                                     >
-                                        <span className="text-3xl">{option.icon}</span>
-                                        <span className="text-xs text-dark-400 group-hover:text-white transition-colors">
+                                        <div className="w-12 h-12 rounded-full bg-dark-800/50 flex items-center justify-center group-hover:scale-110 group-hover:bg-primary-500/10 transition-all share-icon-container">
+                                            <span className="text-2xl text-dark-300 group-hover:text-primary-400 transition-colors">
+                                                {option.icon}
+                                            </span>
+                                        </div>
+                                        <span className="text-xs font-medium text-dark-300 group-hover:text-primary-400 transition-colors">
                                             {option.name}
                                         </span>
                                     </button>
                                 ))}
                                 <button
                                     onClick={copyLink}
-                                    className="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-dark-700 transition-all group"
+                                    className="flex flex-col items-center gap-2.5 p-4 rounded-xl bg-dark-700/30 border border-dark-600/50 hover:bg-dark-700 hover:border-primary-500/50 hover:shadow-lg hover:shadow-primary-500/10 transition-all duration-200 group active:scale-95 share-option-button"
                                 >
-                                    {copied ? (
-                                        <>
-                                            <span className="text-3xl">
-                                                <Check size={40} className="text-green-400" />
-                                            </span>
-                                            <span className="text-xs text-green-400">Copied!</span>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <span className="text-3xl">
-                                                <Copy size={40} />
-                                            </span>
-                                            <span className="text-xs text-dark-400 group-hover:text-white transition-colors">
-                                                Copy
-                                            </span>
-                                        </>
-                                    )}
+                                    <div className={`w-12 h-12 rounded-full bg-dark-800/50 flex items-center justify-center group-hover:scale-110 transition-all share-icon-container ${
+                                        copied 
+                                            ? 'bg-green-500/10' 
+                                            : 'group-hover:bg-primary-500/10'
+                                    }`}>
+                                        {copied ? (
+                                            <Check size={24} className="text-green-400" />
+                                        ) : (
+                                            <Copy size={24} className="text-dark-300 group-hover:text-primary-400 transition-colors" />
+                                        )}
+                                    </div>
+                                    <span className={`text-xs font-medium transition-colors ${
+                                        copied 
+                                            ? 'text-green-400' 
+                                            : 'text-dark-300 group-hover:text-primary-400'
+                                    }`}>
+                                        {copied ? 'Copied!' : 'Copy Link'}
+                                    </span>
                                 </button>
                             </div>
                         </div>
 
-                        {/* Link Preview */}
-                        <div className="px-5 pb-5">
-                            <div className="flex items-center gap-3 p-3 bg-dark-700/50 rounded-lg">
-                                <div className="w-10 h-10 rounded-lg bg-primary-600 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
+                        {/* Link Preview - Enhanced */}
+                        <div className="px-6 pb-6">
+                            <div className="flex items-center gap-3 p-4 bg-dark-700/30 border border-dark-600/50 rounded-xl hover:border-primary-500/50 transition-all">
+                                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center text-white text-base font-bold flex-shrink-0 shadow-lg ring-2 ring-primary-500/20">
                                     N
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                    <p className="text-sm text-white font-medium truncate">{issue.title}</p>
-                                    <p className="text-xs text-dark-400 truncate">{issueUrl}</p>
+                                    <p className="text-sm text-white font-semibold truncate mb-1.5">
+                                        {issue.title}
+                                    </p>
+                                    <div className="flex items-center gap-2">
+                                        <p className="text-xs text-dark-400 truncate font-mono flex-1">
+                                            {issueUrl.length > 35 ? `${issueUrl.substring(0, 35)}...` : issueUrl}
+                                        </p>
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                copyLink();
+                                            }}
+                                            className="p-1.5 rounded-lg hover:bg-dark-600/50 transition-colors flex-shrink-0 group/copy"
+                                            aria-label="Copy link"
+                                        >
+                                            <Copy size={14} className="text-dark-400 group-hover/copy:text-primary-400 transition-colors" />
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
