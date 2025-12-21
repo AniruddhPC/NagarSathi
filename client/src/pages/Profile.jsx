@@ -245,7 +245,7 @@ const Profile = () => {
                                     key={tab.id}
                                     onClick={() => setActiveTab(tab.id)}
                                     className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all flex-1 justify-center ${activeTab === tab.id
-                                            ? 'bg-primary-600 text-white'
+                                            ? 'bg-primary-600 !text-white'
                                             : 'text-dark-400 hover:text-white hover:bg-dark-700'
                                         }`}
                                 >
