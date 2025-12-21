@@ -1310,6 +1310,36 @@ html.light body {
 }
 
 /* ============================================
+   ADMIN PANEL HOVER STATES - LIGHT THEME
+   ============================================ */
+
+/* Table row hover states in light theme */
+.light table tbody tr:hover {
+  background-color: #f1f5f9 !important;
+}
+
+/* Action icon buttons in table cells - hover background */
+.light table td button:hover,
+.light table td a:hover {
+  background-color: #e2e8f0 !important;
+}
+
+/* Action icon buttons - hover text colors based on title attribute */
+.light table td button[title="View"]:hover,
+.light table td a[title="View"]:hover,
+.light table td button[title="Review Report"]:hover {
+  color: #3b82f6 !important;
+}
+
+.light table td button[title="Update Status"]:hover {
+  color: #f59e0b !important;
+}
+
+.light table td button[title="Delete"]:hover {
+  color: #ef4444 !important;
+}
+
+/* ============================================
    RESPONSIVE UTILITIES
    ============================================ */
 

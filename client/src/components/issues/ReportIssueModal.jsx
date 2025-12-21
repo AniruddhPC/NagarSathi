@@ -4,6 +4,7 @@ import Modal from '../common/Modal';
 import Button from '../common/Button';
 import { reportApi } from '../../services/api';
 import toast from 'react-hot-toast';
+import { useTheme } from '../../context/ThemeContext';
 
 /**
  * Report reasons configuration
@@ -22,6 +23,7 @@ const REPORT_REASONS = [
  * Modal for users to report/flag issues
  */
 const ReportIssueModal = ({ isOpen, onClose, issueId, issueTitle }) => {
+    const { isDark } = useTheme();
     const [selectedReason, setSelectedReason] = useState('');
     const [details, setDetails] = useState('');
     const [loading, setLoading] = useState(false);
@@ -98,7 +100,7 @@ const ReportIssueModal = ({ isOpen, onClose, issueId, issueTitle }) => {
                                 key={reason.value}
                                 className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-all ${selectedReason === reason.value
                                         ? 'border-primary-500 bg-primary-500/10'
-                                        : 'border-dark-600 hover:border-dark-500 hover:bg-dark-700/50'
+                                        : `border-dark-600 hover:border-dark-500 ${isDark ? 'hover:bg-gray-900' : 'hover:bg-dark-200'}`
                                     }`}
                             >
                                 <input
