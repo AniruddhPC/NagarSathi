@@ -233,7 +233,9 @@ export const getMyIssues = asyncHandler(async (req, res) => {
         .sort()
         .paginate();
 
-    const issues = await features.query.lean();
+    const issues = await features.query
+        .populate('createdBy', 'name avatar')
+        .lean();
 
     const total = await Issue.countDocuments({ createdBy: req.user._id });
 

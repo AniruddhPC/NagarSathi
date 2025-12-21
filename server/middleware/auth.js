@@ -61,6 +61,45 @@ export const requireAuth = async (req, res, next) => {
                     name: `${clerkUser.firstName || ''} ${clerkUser.lastName || ''}`.trim() || 'Anonymous User',
                     avatar: clerkUser.imageUrl || '',
                 });
+            } else {
+                // Sync user data from Clerk if name is missing or is 'Anonymous User'
+                if (!user.name || user.name === 'Anonymous User' || user.name.trim() === '') {
+                    try {
+                        const clerkUser = await getClerkClient().users.getUser(clerkUserId);
+
+                        // Try multiple sources for the name
+                        let newName = `${clerkUser.firstName || ''} ${clerkUser.lastName || ''}`.trim();
+
+                        // Fallback to username if no first/last name
+                        if (!newName && clerkUser.username) {
+                            newName = clerkUser.username;
+                        }
+
+                        // Fallback to email username part if still no name
+                        if (!newName && clerkUser.emailAddresses?.[0]?.emailAddress) {
+                            newName = clerkUser.emailAddresses[0].emailAddress.split('@')[0];
+                        }
+
+                        console.log('Syncing user from Clerk:', {
+                            clerkUserId,
+                            firstName: clerkUser.firstName,
+                            lastName: clerkUser.lastName,
+                            username: clerkUser.username,
+                            derivedName: newName
+                        });
+
+                        if (newName && newName !== user.name) {
+                            user.name = newName;
+                            user.avatar = clerkUser.imageUrl || user.avatar;
+                            user.email = clerkUser.emailAddresses[0]?.emailAddress || user.email;
+                            await user.save();
+                            console.log('User name updated to:', user.name);
+                        }
+                    } catch (syncError) {
+                        console.error('Error syncing user data from Clerk:', syncError);
+                        // Continue with existing user data
+                    }
+                }
             }
 
             // Attach user info to request

@@ -44,8 +44,8 @@ const clerkAppearance = {
     spacingUnit: "0.25rem",
   },
   elements: {
-    rootBox: "w-full !max-w-[90%] mx-auto",
-    card: "bg-dark-800 border border-dark-700 rounded-xl shadow-xl p-6 sm:p-8",
+    rootBox: "w-full max-w-md mx-auto",
+    card: "bg-dark-800 border border-dark-700 rounded-xl shadow-xl !p-0",
     headerTitle: "text-white text-2xl sm:text-3xl font-bold mb-2",
     headerSubtitle: "text-dark-400 text-sm sm:text-base mb-6",
     socialButtonsBlockButton:

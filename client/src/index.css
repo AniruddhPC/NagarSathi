@@ -654,19 +654,31 @@ html.light body {
   margin: 0 auto !important;
 }
 
-/* Card styling */
+/* Card styling - override for custom auth pages */
 .cl-card {
-  background-color: #1e293b !important;
-  border: 1px solid #334155 !important;
-  border-radius: 0.75rem !important;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2) !important;
-  padding: 1.5rem !important;
+  background-color: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
   width: 100% !important;
+}
+
+/* Remove cardBox shadow/border */
+.cl-cardBox {
+  box-shadow: none !important;
+  border: none !important;
+  background: transparent !important;
+}
+
+/* Remove main element shadow */
+.cl-main {
+  box-shadow: none !important;
 }
 
 @media (min-width: 640px) {
   .cl-card {
-    padding: 2rem !important;
+    padding: 0.3rem !important;
   }
 }
 
@@ -855,6 +867,34 @@ html.light body {
     min-width: 22px !important;
     min-height: 22px !important;
   }
+}
+
+/* Badge - "Last used" text - dark mode default */
+.cl-badge,
+.cl-lastAuthenticationStrategyBadge,
+[class*="cl-badge"],
+[class*="cl-lastAuthentication"],
+.cl-internal-badge,
+[class*="badge"] {
+  color: #93c5fd !important;
+  border: 1px solid #475569 !important;
+  border-radius: 0.375rem !important;
+  font-size: 0.75rem !important;
+  font-weight: 500 !important;
+  padding: 6px 6px !important;
+  background-color: #1e293b !important;
+}
+
+/* Badge - light mode */
+.light .cl-badge,
+.light .cl-lastAuthenticationStrategyBadge,
+.light [class*="cl-badge"],
+.light [class*="cl-lastAuthentication"],
+.light .cl-internal-badge,
+.light [class*="badge"] {
+  color: #1d4ed8 !important;
+  border: 1px solid #93c5fd !important;
+  background-color: #dbeafe !important;
 }
 
 /* Primary button */
@@ -1307,6 +1347,308 @@ html.light body {
 
 .light .cl-alertText {
   color: #475569 !important;
+}
+
+/* ============================================
+   CLERK USER BUTTON & PROFILE MODAL
+   ============================================ */
+
+/* UserButton popover/dropdown - Dark mode (default) */
+.cl-userButtonPopoverCard,
+.cl-userButtonPopoverRootBox,
+.cl-userButtonPopoverMain,
+[class*="cl-userButton"][class*="popover"],
+[class*="cl-userButton"][class*="Popover"] {
+  background-color: #1e293b !important;
+  border: 1px solid #334155 !important;
+  border-radius: 0.75rem !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* UserButton popover actions */
+.cl-userButtonPopoverActionButton,
+.cl-userButtonPopoverActionButtonText,
+[class*="cl-userButton"][class*="action"] {
+  color: #f1f5f9 !important;
+}
+
+.cl-userButtonPopoverActionButton:hover {
+  background-color: #334155 !important;
+}
+
+/* UserButton user preview */
+.cl-userPreviewMainIdentifier,
+.cl-userPreviewSecondaryIdentifier {
+  color: #f1f5f9 !important;
+}
+
+.cl-userPreviewSecondaryIdentifier {
+  color: #94a3b8 !important;
+}
+
+/* User Profile Modal/Panel - Dark mode */
+.cl-userProfile-root,
+.cl-profilePage,
+.cl-profileSection,
+.cl-userProfilePage,
+[class*="cl-userProfile"],
+[class*="cl-profile"] {
+  background-color: #0f172a !important;
+  color: #f1f5f9 !important;
+}
+
+/* Profile modal card */
+.cl-modalContent,
+.cl-userProfile-content,
+[class*="cl-modal"][class*="content"],
+[class*="cl-modal"][class*="Content"] {
+  background-color: #1e293b !important;
+  border: 1px solid #334155 !important;
+  border-radius: 0.75rem !important;
+}
+
+/* Profile modal backdrop */
+.cl-modalBackdrop,
+[class*="cl-modal"][class*="backdrop"],
+[class*="cl-modal"][class*="Backdrop"] {
+  background-color: rgba(0, 0, 0, 0.7) !important;
+}
+
+/* Profile page sections */
+.cl-profileSectionTitle,
+.cl-profileSectionTitleText,
+[class*="cl-profileSection"][class*="title"],
+[class*="cl-profileSection"][class*="Title"] {
+  color: #f1f5f9 !important;
+  font-weight: 600 !important;
+}
+
+.cl-profileSectionContent,
+.cl-profileSectionPrimaryButton,
+[class*="cl-profileSection"][class*="content"],
+[class*="cl-profileSection"][class*="Content"] {
+  color: #cbd5e1 !important;
+}
+
+/* Profile navbar/sidebar */
+.cl-navbar,
+.cl-navbarButton,
+[class*="cl-navbar"] {
+  background-color: #0f172a !important;
+  border-color: #334155 !important;
+}
+
+.cl-navbarButton {
+  color: #94a3b8 !important;
+}
+
+.cl-navbarButton:hover,
+.cl-navbarButton[data-active="true"] {
+  background-color: #1e293b !important;
+  color: #f1f5f9 !important;
+}
+
+/* Profile page header */
+.cl-pageHeader,
+.cl-headerTitle,
+.cl-headerSubtitle,
+[class*="cl-page"][class*="header"],
+[class*="cl-page"][class*="Header"] {
+  color: #f1f5f9 !important;
+}
+
+/* Profile page buttons */
+.cl-profileSectionPrimaryButton,
+.cl-formButtonPrimary {
+  background-color: #3b82f6 !important;
+  color: #ffffff !important;
+}
+
+/* Profile form fields in modal */
+.cl-profilePage .cl-formFieldInput,
+.cl-userProfile .cl-formFieldInput,
+[class*="cl-profile"] input,
+[class*="cl-userProfile"] input {
+  background-color: #1e293b !important;
+  border: 1px solid #475569 !important;
+  color: #f1f5f9 !important;
+}
+
+/* Accordion/expandable sections */
+.cl-accordionTriggerButton,
+.cl-accordionContent,
+[class*="cl-accordion"] {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+  color: #f1f5f9 !important;
+}
+
+.cl-accordionTriggerButton:hover {
+  background-color: #334155 !important;
+}
+
+/* Menu list items */
+.cl-menuList,
+.cl-menuItem,
+[class*="cl-menu"] {
+  background-color: #1e293b !important;
+  color: #f1f5f9 !important;
+}
+
+.cl-menuItem:hover {
+  background-color: #334155 !important;
+}
+
+/* Scrollbar */
+.cl-scrollBox,
+[class*="cl-scroll"] {
+  background-color: #0f172a !important;
+}
+
+/* Avatar upload area */
+.cl-avatarBox,
+.cl-avatarImageActionsUpload,
+.cl-avatarImageActionsRemove {
+  background-color: #1e293b !important;
+  border-color: #475569 !important;
+  color: #f1f5f9 !important;
+}
+
+/* Danger zone / destructive buttons */
+.cl-formButtonReset,
+[class*="destructive"],
+[class*="danger"] {
+  color: #ef4444 !important;
+}
+
+/* ============================================
+   CLERK USER BUTTON - LIGHT MODE
+   ============================================ */
+
+/* UserButton popover - Light mode */
+.light .cl-userButtonPopoverCard,
+.light .cl-userButtonPopoverRootBox,
+.light .cl-userButtonPopoverMain,
+.light [class*="cl-userButton"][class*="popover"],
+.light [class*="cl-userButton"][class*="Popover"] {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+
+.light .cl-userButtonPopoverActionButton,
+.light .cl-userButtonPopoverActionButtonText {
+  color: #1e293b !important;
+}
+
+.light .cl-userButtonPopoverActionButton:hover {
+  background-color: #f1f5f9 !important;
+}
+
+.light .cl-userPreviewMainIdentifier {
+  color: #0f172a !important;
+}
+
+.light .cl-userPreviewSecondaryIdentifier {
+  color: #64748b !important;
+}
+
+/* User Profile Modal - Light mode */
+.light .cl-userProfile-root,
+.light .cl-profilePage,
+.light .cl-profileSection,
+.light [class*="cl-userProfile"],
+.light [class*="cl-profile"] {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+.light .cl-modalContent,
+.light .cl-userProfile-content,
+.light [class*="cl-modal"][class*="content"],
+.light [class*="cl-modal"][class*="Content"] {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+
+.light .cl-profileSectionTitle,
+.light .cl-profileSectionTitleText,
+.light [class*="cl-profileSection"][class*="title"],
+.light [class*="cl-profileSection"][class*="Title"] {
+  color: #0f172a !important;
+}
+
+.light .cl-profileSectionContent,
+.light [class*="cl-profileSection"][class*="content"],
+.light [class*="cl-profileSection"][class*="Content"] {
+  color: #475569 !important;
+}
+
+.light .cl-navbar,
+.light .cl-navbarButton,
+.light [class*="cl-navbar"] {
+  background-color: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+}
+
+.light .cl-navbarButton {
+  color: #64748b !important;
+}
+
+.light .cl-navbarButton:hover,
+.light .cl-navbarButton[data-active="true"] {
+  background-color: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+.light .cl-pageHeader,
+.light [class*="cl-page"][class*="header"],
+.light [class*="cl-page"][class*="Header"] {
+  color: #0f172a !important;
+}
+
+.light .cl-profilePage .cl-formFieldInput,
+.light .cl-userProfile .cl-formFieldInput,
+.light [class*="cl-profile"] input,
+.light [class*="cl-userProfile"] input {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+.light .cl-accordionTriggerButton,
+.light .cl-accordionContent,
+.light [class*="cl-accordion"] {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+.light .cl-accordionTriggerButton:hover {
+  background-color: #f1f5f9 !important;
+}
+
+.light .cl-menuList,
+.light .cl-menuItem,
+.light [class*="cl-menu"] {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+}
+
+.light .cl-menuItem:hover {
+  background-color: #f1f5f9 !important;
+}
+
+.light .cl-scrollBox,
+.light [class*="cl-scroll"] {
+  background-color: #f8fafc !important;
+}
+
+.light .cl-avatarBox,
+.light .cl-avatarImageActionsUpload,
+.light .cl-avatarImageActionsRemove {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
 }
 
 /* ============================================
