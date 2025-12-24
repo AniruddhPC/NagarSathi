@@ -18,6 +18,9 @@ const Modal = ({
   showCloseButton = true,
   className = "",
 }) => {
+  // All hooks must be called before any early returns (Rules of Hooks)
+  const { isDark } = useTheme();
+
   // Close on escape key
   useEffect(() => {
     const handleEscape = (e) => {
@@ -52,7 +55,6 @@ const Modal = ({
     full: "max-w-[95vw]",
   };
 
-  const { isDark } = useTheme();
   const modalContent = (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 ">
       {/* Backdrop */}
@@ -78,11 +80,10 @@ const Modal = ({
             {showCloseButton && (
               <button
                 onClick={onClose}
-                className={`rounded-lg p-2 text-center cursor-pointer transition-all duration-200 ${
-                  isDark
-                    ? "border-primary-500 bg-primary-500/10 text-dark-400 hover:text-white hover:bg-dark-700"
-                    : "border-dark-600 dark:border-dark-600 hover:border-primary-500 hover:bg-primary-500/5 dark:hover:bg-primary-500/10"
-                }}`}
+                className={`rounded-lg p-2 text-center cursor-pointer transition-all duration-200 ${isDark
+                  ? "border-primary-500 bg-primary-500/10 text-dark-400 hover:text-white hover:bg-dark-700"
+                  : "border-dark-600 dark:border-dark-600 hover:border-primary-500 hover:bg-primary-500/5 dark:hover:bg-primary-500/10"
+                  }}`}
               >
                 <X size={20} />
               </button>

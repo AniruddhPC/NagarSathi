@@ -18,7 +18,7 @@ const issueStorage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
         folder: 'nagarsathi/issues',
-        allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
+        allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'avif'],
         transformation: [{ width: 1200, height: 900, crop: 'limit', quality: 'auto' }],
     },
 });
@@ -28,7 +28,7 @@ const resolutionStorage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
         folder: 'nagarsathi/resolutions',
-        allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
+        allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'avif'],
         transformation: [{ width: 1200, height: 900, crop: 'limit', quality: 'auto' }],
     },
 });
