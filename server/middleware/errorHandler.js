@@ -27,10 +27,17 @@ export const errorHandler = (err, req, res, next) => {
     let message = err.message || 'Internal Server Error';
     let errors = err.errors || [];
 
-    // Log error in development
-    if (process.env.NODE_ENV === 'development') {
-        console.error('Error:', err);
-    }
+    // Log error details (always log for debugging)
+    console.error('[API Error]', {
+        message: err.message,
+        statusCode: err.statusCode,
+        name: err.name,
+        httpCode: err.http_code,
+        path: req.path,
+        method: req.method,
+        timestamp: new Date().toISOString(),
+        stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
+    });
 
     // Mongoose validation error
     if (err.name === 'ValidationError') {
@@ -71,6 +78,32 @@ export const errorHandler = (err, req, res, next) => {
             default:
                 message = 'File upload error.';
         }
+    }
+
+    // Cloudinary errors
+    if (err.http_code || err.message?.includes('format') || err.message?.includes('Cloudinary')) {
+        statusCode = err.http_code || 400;
+
+        // Handle specific Cloudinary error messages
+        if (err.message?.toLowerCase().includes('format') && err.message?.toLowerCase().includes('not allowed')) {
+            const formatMatch = err.message.match(/format\s+(\w+)/i);
+            const format = formatMatch ? formatMatch[1].toUpperCase() : 'this';
+            message = `Image format ${format} is not supported. Please use JPG, JPEG, PNG, or WebP.`;
+        } else if (err.message?.includes('File size too large')) {
+            message = 'Image file is too large. Maximum size is 5MB.';
+        } else if (err.message?.includes('Invalid image file')) {
+            message = 'The file appears to be corrupted or is not a valid image.';
+        } else {
+            message = 'Image upload failed. Please try again with a different image.';
+        }
+
+        // Log the full error for debugging
+        console.error('[Cloudinary Error]', {
+            originalMessage: err.message,
+            httpCode: err.http_code,
+            storageErrors: err.storageErrors,
+            stack: err.stack
+        });
     }
 
     // JWT/Auth errors

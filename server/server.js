@@ -130,14 +130,29 @@ const server = app.listen(PORT, () => {
 
 // Handle unhandled promise rejections
 process.on("unhandledRejection", (err) => {
-  console.error("Unhandled Rejection:", err.message);
-  // Close server & exit process
-  server.close(() => process.exit(1));
+  console.error("[Unhandled Rejection]", {
+    message: err.message,
+    name: err.name,
+    httpCode: err.http_code,
+    stack: err.stack,
+    timestamp: new Date().toISOString()
+  });
+
+  // Only crash on critical errors, not on operational errors like image uploads
+  if (!err.http_code && !err.storageErrors) {
+    // Close server & exit process for truly unrecoverable errors
+    server.close(() => process.exit(1));
+  }
 });
 
 // Handle uncaught exceptions
 process.on("uncaughtException", (err) => {
-  console.error("Uncaught Exception:", err.message);
+  console.error("[Uncaught Exception]", {
+    message: err.message,
+    name: err.name,
+    stack: err.stack,
+    timestamp: new Date().toISOString()
+  });
   process.exit(1);
 });
 
