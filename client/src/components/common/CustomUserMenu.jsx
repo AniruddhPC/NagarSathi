@@ -41,7 +41,7 @@ const CustomUserMenu = () => {
 
             {/* Dropdown Menu */}
             {isOpen && (
-                <div className="absolute right-0 mt-2 w-64 bg-dark-800 border border-dark-700 rounded-xl shadow-2xl overflow-hidden z-50 animate-dropdown">
+                <div className="fixed sm:absolute left-2 right-2 sm:left-auto sm:right-0 top-16 sm:top-auto sm:mt-2 w-auto sm:w-64 bg-dark-800 border border-dark-700 rounded-xl shadow-2xl overflow-hidden z-50 animate-dropdown">
                     {/* User Info Header */}
                     <div className="p-4 border-b border-dark-700 bg-dark-900/50">
                         <p className="text-sm font-semibold text-white truncate">

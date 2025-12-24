@@ -91,7 +91,7 @@ const IssueDetail = () => {
 
     if (error) {
         return (
-            <div className="min-h-screen bg-dark-900">
+            <div className="min-h-screen bg-dark-900 pt-16">
                 <Navbar />
                 <div className="container-custom py-16 text-center">
                     <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-8 max-w-md mx-auto">
@@ -112,7 +112,7 @@ const IssueDetail = () => {
     const canDelete = isOwner || isAdmin;
 
     return (
-        <div className="min-h-screen bg-dark-900">
+        <div className="min-h-screen bg-dark-900 pt-16">
             <Navbar />
 
             <main className="container-custom py-8">

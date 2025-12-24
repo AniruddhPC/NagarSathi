@@ -46,7 +46,7 @@ const Home = () => {
     params.district;
 
   return (
-    <div className="h-screen bg-dark-900 flex flex-col overflow-hidden">
+    <div className="h-screen bg-dark-900 flex flex-col pt-16">
       <Navbar />
 
       {/* Mobile Filter Drawer Overlay */}
@@ -87,13 +87,14 @@ const Home = () => {
 
       <main className="flex-1 flex flex-col overflow-hidden px-4 sm:px-6 lg:px-8 py-6">
         {/* Header - Fixed at top */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 flex-shrink-0">
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-1">
+        <div className="home-header flex flex-row items-center justify-between gap-2 mb-4 flex-shrink-0">
+          <div className="flex lg:hidden items-center gap-3">
+            <h1 className="text-xl sm:text-2xl font-bold text-white">
               Issue Feed
             </h1>
-            <p className="text-dark-400">
-              {pagination.total} issues reported in your community
+            <span className="text-dark-500">•</span>
+            <p className="text-dark-400 text-sm">
+              {pagination.total} issues
             </p>
           </div>
           <div className="flex items-center gap-2 md:gap-3">
@@ -101,8 +102,8 @@ const Home = () => {
             <button
               onClick={() => setMobileFiltersOpen(true)}
               className={`lg:hidden flex items-center gap-2 px-3 md:px-4 py-2.5 rounded-xl border transition-all duration-200 ${hasActiveFilters
-                  ? "bg-primary-600/20 border-primary-500/50 text-primary-400"
-                  : "bg-dark-800 border-dark-700 text-dark-300 hover:text-white hover:border-dark-600"
+                ? "bg-primary-600/20 border-primary-500/50 text-primary-400"
+                : "bg-dark-800 border-dark-700 text-dark-300 hover:text-white hover:border-dark-600"
                 }`}
             >
               <SlidersHorizontal size={18} />
@@ -111,26 +112,26 @@ const Home = () => {
                 <span className="w-2 h-2 rounded-full bg-primary-400" />
               )}
             </button>
-            <Link to="/map" state={{ filters: params }}>
+            <Link to="/map" state={{ filters: params }} className="lg:hidden">
               <Button variant="secondary" icon={Map} className="!px-3 md:!px-4">
                 <span className="hidden md:inline">Map View</span>
               </Button>
             </Link>
             <SignedIn>
-              <Link to="/report">
+              <Link to="/report" className="lg:hidden">
                 <Button icon={Plus} className="!px-3 md:!px-4">
                   <span className="hidden md:inline">Report Issue</span>
                 </Button>
               </Link>
             </SignedIn>
-            <SignedOut>
+            {/*<SignedOut>
               <Link to="/sign-in">
                 <Button color="white" className="!px-3 md:!px-4 btn-primary">
                   <Plus className="!text-white" size={18} />
                   <span className="hidden md:inline !text-white">Sign In</span>
                 </Button>
               </Link>
-            </SignedOut>
+            </SignedOut>*/}
           </div>
         </div>
 

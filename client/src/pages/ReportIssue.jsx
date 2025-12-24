@@ -31,7 +31,7 @@ const ReportIssue = () => {
     };
 
     return (
-        <div className="min-h-screen bg-dark-900">
+        <div className="min-h-screen bg-dark-900 pt-16">
             <Navbar />
 
             <main className="container-custom py-8">

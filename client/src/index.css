@@ -14,6 +14,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -23,6 +24,7 @@ body {
   min-height: 100vh;
   line-height: 1.6;
   transition: background-color 0.3s ease, color 0.3s ease;
+  overflow-x: hidden;
 }
 
 /* Light mode body */
@@ -469,6 +471,15 @@ html.light body {
    UTILITY CLASSES
    ============================================ */
 
+/* Extra small screen utilities (below 390px) */
+@media (max-width: 389px) {
+  .home-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.5rem !important;
+  }
+}
+
 @layer components {
 
   /* Container with max width */
@@ -592,6 +603,29 @@ html.light body {
 .leaflet-container {
   background: #1e293b;
   font-family: 'Inter', system-ui, sans-serif;
+  z-index: 0 !important;
+}
+
+/* Limit all Leaflet panes z-index to stay below mobile menu */
+.leaflet-pane,
+.leaflet-tile-pane,
+.leaflet-overlay-pane,
+.leaflet-shadow-pane,
+.leaflet-marker-pane,
+.leaflet-tooltip-pane,
+.leaflet-popup-pane,
+.leaflet-map-pane {
+  z-index: auto !important;
+}
+
+/* Leaflet controls should stay within map bounds */
+.leaflet-control-container {
+  z-index: 50 !important;
+}
+
+.leaflet-top,
+.leaflet-bottom {
+  z-index: 50 !important;
 }
 
 .leaflet-popup-content-wrapper {

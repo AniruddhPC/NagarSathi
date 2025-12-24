@@ -48,13 +48,13 @@ export const formatRelativeTime = (date) => {
 
 // Category display names and colors
 export const categoryConfig = {
-    pothole: { label: 'Pothole', color: 'text-orange-400', bg: 'bg-orange-500/20' },
-    garbage: { label: 'Garbage', color: 'text-green-400', bg: 'bg-green-500/20' },
-    water_leak: { label: 'Water Leak', color: 'text-blue-400', bg: 'bg-blue-500/20' },
-    streetlight: { label: 'Streetlight', color: 'text-yellow-400', bg: 'bg-yellow-500/20' },
-    drainage: { label: 'Drainage', color: 'text-purple-400', bg: 'bg-purple-500/20' },
-    road_damage: { label: 'Road Damage', color: 'text-red-400', bg: 'bg-red-500/20' },
-    other: { label: 'Other', color: 'text-gray-400', bg: 'bg-gray-500/20' },
+    pothole: { label: 'Pothole', color: 'text-gray-300', bg: 'bg-gray-500/50' },
+    garbage: { label: 'Garbage', color: 'text-gray-300', bg: 'bg-gray-500/50' },
+    water_leak: { label: 'Water Leak', color: 'text-gray-300', bg: 'bg-gray-500/50' },
+    streetlight: { label: 'Streetlight', color: 'text-gray-300', bg: 'bg-gray-500/50' },
+    drainage: { label: 'Drainage', color: 'text-gray-300', bg: 'bg-gray-500/50' },
+    road_damage: { label: 'Road Damage', color: 'text-gray-300', bg: 'bg-gray-500/50' },
+    other: { label: 'Other', color: 'text-gray-300', bg: 'bg-gray-500/50' },
 };
 
 // Status display configuration

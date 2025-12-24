@@ -77,7 +77,7 @@ const MapPage = () => {
     };
 
     return (
-        <div className="h-screen flex flex-col bg-dark-900">
+        <div className="h-screen flex flex-col bg-dark-900 overflow-hidden pt-16">
             <Navbar />
 
             {/* Map Controls */}

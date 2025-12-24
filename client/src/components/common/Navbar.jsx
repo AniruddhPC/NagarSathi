@@ -16,7 +16,7 @@ import {
   Moon,
   LogOut,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 /**
  * Navigation Bar Component
@@ -45,129 +45,143 @@ const Navbar = () => {
 
   const closeMobileMenu = () => setMobileMenuOpen(false);
 
-  return (
-    <nav className="sticky top-0 z-50 bg-dark-900/80 backdrop-blur-lg border-b border-dark-700 navbar-header">
-      <div className="w-full px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2 flex-shrink-0">
-            {/* Mini logo for mobile/compact spaces */}
-            <img
-              src={isDark ? "/mini-logo.png" : "/mini-logo-light.png"}
-              alt="NagarSathi"
-              className="h-16 rounded-md"
-            />
-          </Link>
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileMenuOpen]);
 
-          {/* Desktop Navigation - visible at lg (1024px) and up */}
-          <div className="hidden lg:flex items-center space-x-1">
-            {navLinks.map((link) => {
-              if (link.authRequired) {
+  return (
+    <>
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-dark-900/80 backdrop-blur-lg border-b border-dark-700 navbar-header">
+        <div className="w-full px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo */}
+            <Link to="/" className="flex items-center space-x-2 flex-shrink-0">
+              {/* Mini logo for mobile/compact spaces */}
+              <img
+                src={isDark ? "/mini-logo.png" : "/mini-logo-light.png"}
+                alt="NagarSathi"
+                className="h-16 rounded-md"
+              />
+            </Link>
+
+            {/* Desktop Navigation - visible at lg (1024px) and up */}
+            <div className="hidden lg:flex items-center space-x-1">
+              {navLinks.map((link) => {
+                if (link.authRequired) {
+                  return (
+                    <SignedIn key={link.path}>
+                      <Link
+                        to={link.path}
+                        className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 nav-link ${isActive(link.path)
+                          ? "bg-primary-600 text-white"
+                          : "text-dark-300 hover:text-white hover:bg-dark-700"
+                          }`}
+                      >
+                        <link.icon size={18} />
+                        <span>{link.label}</span>
+                      </Link>
+                    </SignedIn>
+                  );
+                }
                 return (
-                  <SignedIn key={link.path}>
-                    <Link
-                      to={link.path}
-                      className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 nav-link ${isActive(link.path)
-                        ? "bg-primary-600 text-white"
-                        : "text-dark-300 hover:text-white hover:bg-dark-700"
-                        }`}
-                    >
-                      <link.icon size={18} />
-                      <span>{link.label}</span>
-                    </Link>
-                  </SignedIn>
+                  <Link
+                    key={link.path}
+                    to={link.path}
+                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 nav-link ${isActive(link.path)
+                      ? "bg-primary-600 text-white"
+                      : "text-dark-300 hover:text-white hover:bg-dark-700"
+                      }`}
+                  >
+                    <link.icon size={18} />
+                    <span>{link.label}</span>
+                  </Link>
                 );
-              }
-              return (
+              })}
+
+              {/* Admin Link */}
+              {isAdmin && (
                 <Link
-                  key={link.path}
-                  to={link.path}
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 nav-link ${isActive(link.path)
+                  to="/admin"
+                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 nav-link ${isActive("/admin")
                     ? "bg-primary-600 text-white"
-                    : "text-dark-300 hover:text-white hover:bg-dark-700"
+                    : "text-amber-400 hover:text-amber-300 hover:bg-dark-700"
                     }`}
                 >
-                  <link.icon size={18} />
-                  <span>{link.label}</span>
+                  <LayoutDashboard size={18} />
+                  <span>Admin</span>
                 </Link>
-              );
-            })}
+              )}
 
-            {/* Admin Link */}
-            {isAdmin && (
-              <Link
-                to="/admin"
-                className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 nav-link ${isActive("/admin")
-                  ? "bg-primary-600 text-white"
-                  : "text-amber-400 hover:text-amber-300 hover:bg-dark-700"
-                  }`}
+              {/* Theme Toggle */}
+              <button
+                onClick={toggleTheme}
+                className="p-2 rounded-lg text-dark-300 hover:text-white hover:bg-dark-700 transition-all duration-200 nav-theme-toggle"
+                title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
               >
-                <LayoutDashboard size={18} />
-                <span>Admin</span>
-              </Link>
-            )}
+                {isDark ? <Sun size={18} /> : <Moon size={18} />}
+              </button>
+            </div>
 
-            {/* Theme Toggle */}
-            <button
-              onClick={toggleTheme}
-              className="p-2 rounded-lg text-dark-300 hover:text-white hover:bg-dark-700 transition-all duration-200 nav-theme-toggle"
-              title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
-            >
-              {isDark ? <Sun size={18} /> : <Moon size={18} />}
-            </button>
-          </div>
+            {/* Right Side - Auth & Mobile Toggle */}
+            <div className="flex items-center space-x-2 sm:space-x-4">
+              {/* Sign In/Up - Always visible for logged out users */}
+              <SignedOut>
+                <Link
+                  to="/sign-in"
+                  className="btn-ghost text-sm hidden sm:inline-flex navbar-signin"
+                >
+                  Sign In
+                </Link>
+                <Link to="/sign-up" className="btn-primary text-sm">
+                  Get Started
+                </Link>
+              </SignedOut>
 
-          {/* Right Side - Auth & Mobile Toggle */}
-          <div className="flex items-center space-x-2 sm:space-x-4">
-            {/* Sign In/Up - Always visible for logged out users */}
-            <SignedOut>
-              <Link
-                to="/sign-in"
-                className="btn-ghost text-sm hidden sm:inline-flex navbar-signin"
+              {/* Logged in user controls */}
+              <SignedIn>
+                <div className="hidden lg:flex items-center space-x-3 gap-2">
+                  <NotificationDropdown />
+                  <CustomUserMenu />
+                </div>
+
+                {/* Notification Bell & Profile Icon - Mobile/Tablet (below lg) */}
+                <div className="lg:hidden flex items-center space-x-2">
+                  <NotificationDropdown />
+                  <CustomUserMenu />
+                </div>
+              </SignedIn>
+
+              {/* Mobile Menu Button - visible below lg */}
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="lg:hidden p-2 text-dark-300 hover:text-white nav-mobile-toggle"
               >
-                Sign In
-              </Link>
-              <Link to="/sign-up" className="btn-primary text-sm">
-                Get Started
-              </Link>
-            </SignedOut>
-
-            {/* Logged in user controls */}
-            <SignedIn>
-              <div className="hidden lg:flex items-center space-x-3 gap-2">
-                <NotificationDropdown />
-                <CustomUserMenu />
-              </div>
-
-              {/* Notification Bell & Profile Icon - Mobile/Tablet (below lg) */}
-              <div className="lg:hidden flex items-center space-x-2">
-                <NotificationDropdown />
-                <CustomUserMenu />
-              </div>
-            </SignedIn>
-
-            {/* Mobile Menu Button - visible below lg */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 text-dark-300 hover:text-white nav-mobile-toggle"
-            >
-              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+                {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      </nav>
 
       {/* Mobile Menu Overlay */}
       {mobileMenuOpen && (
         <div
-          className="fixed inset-0 bg-black/60 z-[60] lg:hidden mobile-menu-overlay"
+          className="fixed inset-0 bg-black/60 z-[100] lg:hidden mobile-menu-overlay"
           onClick={closeMobileMenu}
         />
       )}
 
       {/* Mobile Menu Drawer - Slides from right */}
       <div
-        className={`fixed top-0 right-0 h-screen w-[280px] bg-dark-900 z-[70] transform transition-transform duration-300 ease-in-out lg:hidden mobile-menu-drawer ${mobileMenuOpen ? "translate-x-0" : "translate-x-full"
+        className={`fixed top-0 right-0 h-screen w-[280px] bg-dark-900 z-[110] transform transition-transform duration-300 ease-in-out lg:hidden mobile-menu-drawer ${mobileMenuOpen ? "translate-x-0" : "translate-x-full"
           }`}
       >
         {/* Drawer Header */}
@@ -271,7 +285,7 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-    </nav>
+    </>
   );
 };
 

@@ -152,7 +152,7 @@ const AdminDashboard = () => {
   // Redirect if not admin
   if (userLoading) {
     return (
-      <div className="min-h-screen bg-dark-900 flex items-center justify-center">
+      <div className="min-h-screen bg-dark-900 flex items-center justify-center pt-16">
         <Loader size="lg" text="Loading..." />
       </div>
     );
@@ -286,16 +286,16 @@ const AdminDashboard = () => {
   const hasActiveFilters =
     activeTab === "issues"
       ? params.category ||
-        params.status ||
-        params.search ||
-        params.state ||
-        params.district
+      params.status ||
+      params.search ||
+      params.state ||
+      params.district
       : reportsParams.category ||
-        reportsParams.issueStatus ||
-        reportsParams.search;
+      reportsParams.issueStatus ||
+      reportsParams.search;
 
   return (
-    <div className="h-screen bg-dark-900 flex flex-col overflow-hidden">
+    <div className="h-screen bg-dark-900 flex flex-col overflow-hidden pt-16">
       <Navbar />
 
       {/* Mobile Filter Drawer Overlay */}
@@ -308,9 +308,8 @@ const AdminDashboard = () => {
 
       {/* Mobile Filter Drawer */}
       <div
-        className={`fixed top-0 left-0 h-full w-[300px] bg-dark-900 z-50 transform transition-transform duration-300 ease-in-out lg:hidden ${
-          mobileFiltersOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`fixed top-0 left-0 h-full w-[300px] bg-dark-900 z-50 transform transition-transform duration-300 ease-in-out lg:hidden ${mobileFiltersOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
       >
         <div className="flex items-center justify-between p-4 border-b border-dark-700">
           <h2 className="text-lg font-semibold text-white">Filters</h2>
@@ -363,70 +362,53 @@ const AdminDashboard = () => {
       </div>
 
       <main className="flex-1 flex flex-col overflow-hidden px-4 sm:px-6 lg:px-8 py-6">
-        {/* Header - Fixed at top */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 flex-shrink-0">
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-1">
-              Admin Dashboard
+        {/* Header - Centered tabs */}
+        <div className="relative flex items-center justify-center gap-2 mb-4 flex-shrink-0">
+          {/* Title and Filter button - Left side */}
+          <div className="absolute left-0 flex items-center gap-2">
+            <h1 className="text-lg sm:text-2xl font-bold text-white">
+              Admin
             </h1>
-            <p className="text-dark-400">
-              Manage issues and monitor platform analytics
-            </p>
-          </div>
-          <div className="flex items-center gap-3">
-            {/* Mobile Filter Button - Show only on Issues/Reports tabs */}
             {(activeTab === "issues" || activeTab === "reports") && (
               <button
                 onClick={() => setMobileFiltersOpen(true)}
-                className={`lg:hidden flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-all duration-200 ${
-                  hasActiveFilters
-                    ? "bg-primary-600/20 border-primary-500/50 text-primary-400"
-                    : `bg-dark-800 border-dark-700 text-dark-300 hover:border-dark-600 ${
-                        isDark
-                          ? "hover:bg-dark-700 "
-                          : "hover:bg-dark-200 hover:!text-black"
-                      }`
-                }`}
+                className={`lg:hidden flex items-center gap-2 px-2 py-1.5 rounded-lg border transition-all duration-200 ${hasActiveFilters
+                  ? "bg-primary-600/20 border-primary-500/50 text-primary-400"
+                  : "bg-dark-800 border-dark-700 text-dark-300 hover:border-dark-600"
+                  }`}
               >
-                <SlidersHorizontal size={18} />
-                <span>Filters</span>
+                <SlidersHorizontal size={14} />
                 {hasActiveFilters && (
                   <span className="w-2 h-2 rounded-full bg-primary-400" />
                 )}
               </button>
             )}
-            <div className="flex items-center gap-2 text-dark-400">
-              <Settings size={18} />
-              <span className="hidden sm:inline">Welcome, {user?.name}</span>
-            </div>
           </div>
-        </div>
 
-        {/* Tabs - Fixed */}
-        <div className="flex gap-2 mb-6 border-b border-dark-700 pb-4 flex-shrink-0 overflow-x-auto scrollbar-hide">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
-                activeTab === tab.id
+          {/* Centered Tabs */}
+          <div className="flex gap-1 overflow-x-auto scrollbar-hide">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${activeTab === tab.id
                   ? "bg-primary-600 !text-white"
-                  : `text-dark-400 hover:text-white  ${
-                      isDark
-                        ? "hover:bg-dark-700 "
-                        : "hover:bg-dark-200 hover:!text-black"
-                    }`
-              }`}
-            >
-              <tab.icon size={18} />
-              {tab.label}
-              {tab.badge > 0 && (
-                <span className="ml-1 px-1.5 py-0.5 text-xs font-bold bg-red-500 text-white rounded-full">
-                  {tab.badge}
-                </span>
-              )}
-            </button>
-          ))}
+                  : `text-dark-400 hover:text-white ${isDark
+                    ? "hover:bg-dark-700"
+                    : "hover:bg-dark-200 hover:!text-black"
+                  }`
+                  }`}
+              >
+                <tab.icon size={18} />
+                <span className="hidden sm:inline">{tab.label}</span>
+                {tab.badge > 0 && (
+                  <span className="px-1.5 py-0.5 text-xs font-bold bg-red-500 text-white rounded-full">
+                    {tab.badge}
+                  </span>
+                )}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Tab Content - Takes remaining height */}
