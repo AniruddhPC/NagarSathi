@@ -36,25 +36,41 @@ app.use(
       if (!origin) return callback(null, true);
 
       const allowedOrigins = [
+        // Local development
         "http://localhost:5173",
         "http://localhost:3000",
         "http://localhost:5174",
+        // Production URLs - add both spelling variants
+        "https://nagar-sathi.vercel.app",
+        "https://nagar-saathi.vercel.app",
+        // Environment variable for custom domain
         process.env.CLIENT_URL,
       ].filter(Boolean);
+
+      // Log origin for debugging CORS issues in production
+      if (process.env.NODE_ENV !== "development") {
+        console.log("[CORS] Request from origin:", origin, "| Allowed:", allowedOrigins.includes(origin));
+      }
 
       // Check if origin is allowed
       if (allowedOrigins.includes(origin)) {
         callback(null, true);
+      } else if (
+        // Allow localhost with any port in development
+        origin.startsWith("http://localhost:") ||
+        origin.startsWith("https://localhost:")
+      ) {
+        callback(null, true);
+      } else if (
+        // Allow Vercel preview deployments (*.vercel.app)
+        origin.endsWith(".vercel.app") &&
+        (origin.includes("nagar-sathi") || origin.includes("nagar-saathi"))
+      ) {
+        console.log("[CORS] Allowing Vercel preview deployment:", origin);
+        callback(null, true);
       } else {
-        // For development, allow localhost with any port
-        if (
-          origin.startsWith("http://localhost:") ||
-          origin.startsWith("https://localhost:")
-        ) {
-          callback(null, true);
-        } else {
-          callback(new Error("Not allowed by CORS"));
-        }
+        console.error("[CORS] Blocked origin:", origin);
+        callback(new Error("Not allowed by CORS"));
       }
     },
     credentials: true,
