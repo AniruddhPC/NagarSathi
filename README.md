@@ -13,7 +13,6 @@ A modern, production-ready civic issue reporting platform that connects citizens
 </div>
  
 ---
-
 ## 📑 Table of Contents
 
 - [Overview](#-overview)
