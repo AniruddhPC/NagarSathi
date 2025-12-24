@@ -11,7 +11,7 @@ A modern, production-ready civic issue reporting platform that connects citizens
 [![Clerk Auth](https://img.shields.io/badge/Auth-Clerk-purple)](https://clerk.com)
 
 </div>
-
+ 
 ---
 
 ## 📑 Table of Contents
