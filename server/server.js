@@ -74,8 +74,27 @@ app.use(
       }
     },
     credentials: true,
+    // Explicitly allow these methods for preflight
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    // Allow these headers in requests
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "X-Requested-With",
+      "Accept",
+      "Origin",
+    ],
+    // Expose these headers to the client
+    exposedHeaders: ["Content-Length", "X-Request-Id"],
+    // Cache preflight response for 24 hours
+    maxAge: 86400,
   })
 );
+
+// Explicit OPTIONS handler for preflight requests (required for Vercel serverless)
+app.options("*", (req, res) => {
+  res.sendStatus(204);
+});
 
 // Body parsers
 app.use(express.json({ limit: "10mb" }));
