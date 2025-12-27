@@ -2,7 +2,6 @@
 
 <div align="center">
 
-![NagarSathi](https://via.placeholder.com/1200x400/0f172a/3b82f6?text=NagarSathi+-+Civic+Issue+Reporting+Platform)
 
 A modern, production-ready civic issue reporting platform that connects citizens with local authorities to report and resolve community issues efficiently.
 
